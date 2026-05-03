@@ -1,88 +1,99 @@
-const subtitle = document.getElementById("subtitle");
-const messages = [
-  "welcome to the void",
-  "system online...",
-  "particles drifting",
-  "dll. active",
-  "loading reality",
-  "connection stable"
-];
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
 
-function randomMessage() {
-  subtitle.textContent = messages[Math.floor(Math.random() * messages.length)];
-}
+let particles = [];
+const particleCount = 100;
+const connectionDistance = 150;
+const mouseRadius = 200;
 
-setInterval(randomMessage, 15000);
-randomMessage();
-
-discordBtn.onclick = () => {
-  window.open("https://discord.gg/QNzZtNnm4B", "_blank");
+let mouse = {
+    x: null,
+    y: null
 };
 
-// Particle network background
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-let w, h;
-function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-const mouse = { x: null, y: null };
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
+window.addEventListener('mousemove', (event) => {
+    mouse.x = event.x;
+    mouse.y = event.y;
 });
 
-const dots = Array.from({ length: 80 }, () => ({
-  x: Math.random() * w,
-  y: Math.random() * h,
-  vx: (Math.random() - 0.5) * 0.6,
-  vy: (Math.random() - 0.5) * 0.6
-}));
+window.addEventListener('resize', () => {
+    initCanvas();
+});
 
-function animate() {
-  ctx.clearRect(0, 0, w, h);
-
-  for (let d of dots) {
-    d.x += d.vx;
-    d.y += d.vy;
-
-    if (d.x < 0 || d.x > w) d.vx *= -1;
-    if (d.y < 0 || d.y > h) d.vy *= -1;
-
-    ctx.beginPath();
-    ctx.arc(d.x, d.y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(200,180,255,0.6)";
-    ctx.fill();
-
-    for (let d2 of dots) {
-      const dist = Math.hypot(d.x - d2.x, d.y - d2.y);
-      if (dist < 120) {
-        ctx.beginPath();
-        ctx.strokeStyle = `rgba(200,180,255,${1 - dist / 120})`;
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d2.x, d2.y);
-        ctx.stroke();
-      }
-    }
-
-    if (mouse.x && mouse.y) {
-      const distM = Math.hypot(d.x - mouse.x, d.y - mouse.y);
-      if (distM < 150) {
-        ctx.beginPath();
-        ctx.strokeStyle = "rgba(255,255,255,0.3)";
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  requestAnimationFrame(animate);
+function initCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    createParticles();
 }
 
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
+    }
+
+    draw() {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function createParticles() {
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        // Connect to mouse
+        if (mouse.x !== null && mouse.y !== null) {
+            let dx = particles[i].x - mouse.x;
+            let dy = particles[i].y - mouse.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < mouseRadius) {
+                // Connect to other nearby particles when mouse is near
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx2 = particles[i].x - particles[j].x;
+                    let dy2 = particles[i].y - particles[j].y;
+                    let distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                    if (distance2 < connectionDistance) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance2 / connectionDistance})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+initCanvas();
 animate();
