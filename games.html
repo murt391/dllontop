@@ -212,7 +212,6 @@
                     <div class="game-title">BitLife</div>
                 </div>
             </a>
-            <!-- FNAE moved to end -->
             <a href="FNAE.html" class="game-card">
                 <img src="https://raw.githubusercontent.com/murt391/dllontop/main/710.png" alt="Five Night's at Epstein's" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=FNAE'">
                 <div class="game-info">
@@ -223,22 +222,6 @@
     </div>
 
     <script>
-        // Background Music Persistence
-        const bgMusic = document.getElementById('bgMusic');
-        const playMusic = () => {
-            bgMusic.play().catch(() => {});
-            document.removeEventListener('click', playMusic);
-        };
-        document.addEventListener('click', playMusic);
-        setInterval(() => {
-            localStorage.setItem('dll-music-time', bgMusic.currentTime);
-        }, 1000);
-        window.addEventListener('load', () => {
-            const savedTime = localStorage.getItem('dll-music-time');
-            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
-            bgMusic.play().catch(() => {});
-        });
-
         // Theme Persistence
         const savedStart = localStorage.getItem('dll-theme-start');
         const savedEnd = localStorage.getItem('dll-theme-end');
@@ -246,6 +229,19 @@
             document.documentElement.style.setProperty('--gradient-start', savedStart);
             document.documentElement.style.setProperty('--gradient-end', savedEnd);
         }
+
+        // Background Music Logic
+        const bgMusic = document.getElementById('bgMusic');
+        const startMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('keydown', startMusic);
+        };
+        document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
+        window.addEventListener('load', () => {
+            bgMusic.play().catch(() => {});
+        });
 
         // Particle System
         const canvas = document.getElementById('particleCanvas');
