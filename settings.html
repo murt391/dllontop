@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll. | settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a0033;
+            --gradient-start: #3a0066;
+            --gradient-end: #0d001a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Fredoka', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .settings-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .theme-option {
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-option:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-option.active {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        /* Theme Definitions */
+        .theme-purple { background: #3a0066; }
+        .theme-midnight { background: #000428; }
+        .theme-forest { background: #002b1c; }
+        .theme-ocean { background: #00394d; }
+        .theme-sunset { background: #4d0000; }
+        .theme-void { background: #111111; }
+        .theme-nebula { background: #2d004d; }
+
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="settings-card">
+        <h1>themes</h1>
+        <div class="themes-grid">
+            <div class="theme-option active" onclick="setTheme('purple', '#3a0066', '#0d001a')">original</div>
+            <div class="theme-option" onclick="setTheme('midnight', '#004e92', '#000428')">midnight</div>
+            <div class="theme-option" onclick="setTheme('forest', '#004d33', '#001a11')">forest</div>
+            <div class="theme-option" onclick="setTheme('ocean', '#0077be', '#002b4d')">ocean</div>
+            <div class="theme-option" onclick="setTheme('sunset', '#8b0000', '#330000')">sunset</div>
+            <div class="theme-option" onclick="setTheme('void', '#333333', '#000000')">void</div>
+            <div class="theme-option" onclick="setTheme('nebula', '#6a008a', '#2d004d')">nebula</div>
+        </div>
+        <a href="index.html" class="back-btn">← back to home</a>
+    </div>
+
+    <script>
+        function setTheme(name, start, end) {
+            // Update CSS Variables
+            document.documentElement.style.setProperty('--gradient-start', start);
+            document.documentElement.style.setProperty('--gradient-end', end);
+            
+            // Save to LocalStorage
+            localStorage.setItem('dll-theme-start', start);
+            localStorage.setItem('dll-theme-end', end);
+            localStorage.setItem('dll-theme-name', name);
+
+            // Update Active State
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.innerText.toLowerCase() === name) opt.classList.add('active');
+            });
+        }
+
+        // Load Theme on Init
+        const savedStart = localStorage.getItem('dll-theme-start');
+        const savedEnd = localStorage.getItem('dll-theme-end');
+        const savedName = localStorage.getItem('dll-theme-name');
+        if (savedStart && savedEnd) {
+            setTheme(savedName, savedStart, savedEnd);
+        }
+
+        // Particle System
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 100;
+        window.addEventListener('resize', initCanvas);
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        initCanvas();
+        animate();
+    </script>
+</body>
+</html>
