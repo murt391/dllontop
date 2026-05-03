@@ -93,6 +93,8 @@
             backdrop-filter: blur(5px);
             text-decoration: none;
             color: white;
+            overflow: hidden; /* Ensures zoomed images don't spill out */
+            position: relative;
         }
 
         .game-card:hover {
@@ -105,13 +107,14 @@
         .game-thumbnail {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Changed to contain to ensure full image fits */
+            background: rgba(0, 0, 0, 0.2); /* Subtle background for letterboxing */
             border-radius: 20px;
             transition: transform 0.3s ease;
         }
 
         .game-card:hover .game-thumbnail {
-            transform: scale(1.1);
+            transform: scale(1.05); /* Reduced zoom for a cleaner look */
         }
 
         .game-info {
@@ -173,12 +176,12 @@
                     <div class="game-title">Five Night's at Epstein's</div>
                 </div>
             </a>
-            <div class="game-card">
-                <img src="game2-thumb.png" alt="game 2" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+2'">
+            <a href="https://dllontop.org/gtag.html" class="game-card">
+                <img src="https://raw.githubusercontent.com/murt391/dllontop/main/gtag.png" alt="Gorilla Tag" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=GTAG'">
                 <div class="game-info">
-                    <div class="game-title">game 2</div>
+                    <div class="game-title">Gorilla Tag</div>
                 </div>
-            </div>
+            </a>
             <div class="game-card">
                 <img src="game3-thumb.png" alt="game 3" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+3'">
                 <div class="game-info">
