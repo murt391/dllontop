@@ -4,9 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>selenite.</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2e004f;
+            background: radial-gradient(circle at center, #4a0080 0%, #1a0033 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: block;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            pointer-events: auto;
+        }
+
+        .icon-link {
+            color: white;
+            font-size: 2.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0.9;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-link:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
@@ -15,12 +94,127 @@
         <h1 class="title">selenite.</h1>
         <p class="subtitle">sure just downgrade the about:blank page</p>
         <div class="icons">
-            <a href="#" class="icon-link"><i class="fa-solid fa-user"></i></a>
-            <a href="#" class="icon-link"><i class="fa-solid fa-gamepad"></i></a>
-            <a href="#" class="icon-link"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" class="icon-link" title="User">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <a href="#" class="icon-link" title="Gamepad">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="6" y1="9" x2="6" y2="9"></line>
+                    <line x1="10" y1="9" x2="10" y2="9"></line>
+                    <line x1="14" y1="9" x2="14" y2="9"></line>
+                    <line x1="18" y1="9" x2="18" y2="9"></line>
+                    <path d="M5 18H3c-1 0-2-1-2-2V8c0-1 1-2 2-2h18c1 0 2 1 2 2v8c0 1-1 2-2 2h-2"></path>
+                </svg>
+            </a>
+            <a href="#" class="icon-link" title="Discord">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.3671a19.8062 19.8062 0 0 0-4.885-1.515a.074.074 0 0 0-.079.0366c-.211.3753-.444.8648-.607 1.255a18.27 18.27 0 0 0-5.487 0c-.163-.3905-.396-.8802-.609-1.255a.077.077 0 0 0-.079-.0365a19.7896 19.7896 0 0 0-4.885 1.515a.074.074 0 0 0-.041.0277C1.541 9.6782 0 14.6951 0 19.6741a.081.081 0 0 0 .033.0667a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.0280c.462-.612.873-1.25 1.226-1.911a.077.077 0 0 0-.042-.107a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.713 10.713 0 0 0 .372-.294a.074.074 0 0 1 .076-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.294a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.359.674.769 1.302 1.226 1.911a.078.078 0 0 0 .084.028a19.963 19.963 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.0667c0-4.993-1.542-9.678-6.53-13.995a.061.061 0 0 0-.033-.03zM8.02 15.9729c-1.1625 0-2.1225-.9671-2.1225-2.1575c0-1.1904.9525-2.1575 2.1225-2.1575c1.1808 0 2.1384.975 2.1225 2.1575c0 1.1904-.9525 2.1575-2.1225 2.1575zm7.9eduard 0c-1.1625 0-2.1225-.9671-2.1225-2.1575c0-1.1904.9525-2.1575 2.1225-2.1575c1.1808 0 2.1384.975 2.1225 2.1575c0 1.1904-.9408 2.1575-2.1225 2.1575z"/>
+                </svg>
+            </a>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const particleCount = 100;
+        const connectionDistance = 150;
+        const mouseRadius = 200;
+
+        let mouse = {
+            x: null,
+            y: null
+        };
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('resize', () => {
+            initCanvas();
+        });
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = particles[i].x - mouse.x;
+                    let dy = particles[i].y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < mouseRadius) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            let dx2 = particles[i].x - particles[j].x;
+                            let dy2 = particles[i].y - particles[j].y;
+                            let distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+                            if (distance2 < connectionDistance) {
+                                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance2 / connectionDistance})`;
+                                ctx.lineWidth = 0.5;
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        initCanvas();
+        animate();
+    </script>
 </body>
 </html>
