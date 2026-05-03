@@ -8,6 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #1a0033;
+            --gradient-start: #3a0066;
+            --gradient-end: #0d001a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +21,8 @@
         }
 
         body {
-            background-color: #1a0033;
-            background: radial-gradient(circle at center, #3a0066 0%, #0d001a 100%);
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
             height: 100vh;
             width: 100vw;
             overflow-x: hidden;
@@ -222,6 +228,14 @@
     </div>
 
     <script>
+        // Theme Persistence
+        const savedStart = localStorage.getItem('dll-theme-start');
+        const savedEnd = localStorage.getItem('dll-theme-end');
+        if (savedStart && savedEnd) {
+            document.documentElement.style.setProperty('--gradient-start', savedStart);
+            document.documentElement.style.setProperty('--gradient-end', savedEnd);
+        }
+
         // Particle System (Same as main page)
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
