@@ -149,19 +149,16 @@
     </div>
 
     <script>
-        // Background Music Persistence
+        // Background Music Logic
         const bgMusic = document.getElementById('bgMusic');
-        const playMusic = () => {
+        const startMusic = () => {
             bgMusic.play().catch(() => {});
-            document.removeEventListener('click', playMusic);
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('keydown', startMusic);
         };
-        document.addEventListener('click', playMusic);
-        setInterval(() => {
-            localStorage.setItem('dll-music-time', bgMusic.currentTime);
-        }, 1000);
+        document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
         window.addEventListener('load', () => {
-            const savedTime = localStorage.getItem('dll-music-time');
-            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
             bgMusic.play().catch(() => {});
         });
 
