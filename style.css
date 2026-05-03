@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  background: #e6f5e6;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #4CAF50;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar h1 {
+  font-size: 22px;
+}
+
+.sidebar input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+}
+
+.sidebar button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: white;
+  color: green;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* MAIN AREA */
+.main {
+  margin-left: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+.topbar {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* GRID LIKE YOUR IMAGE */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+/* GAME CARDS */
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
