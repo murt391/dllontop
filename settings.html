@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        #bgMusic {
+            display: none;
+        }
         :root {
             --bg-color: #1a0033;
             --gradient-start: #3a0066;
@@ -111,6 +114,10 @@
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="settings-card">
         <h1>settings</h1>
@@ -142,6 +149,22 @@
     </div>
 
     <script>
+        // Background Music Persistence
+        const bgMusic = document.getElementById('bgMusic');
+        const playMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', playMusic);
+        };
+        document.addEventListener('click', playMusic);
+        setInterval(() => {
+            localStorage.setItem('dll-music-time', bgMusic.currentTime);
+        }, 1000);
+        window.addEventListener('load', () => {
+            const savedTime = localStorage.getItem('dll-music-time');
+            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
+            bgMusic.play().catch(() => {});
+        });
+
         const themes = {
             purple: { start: '#3a0066', end: '#0d001a' },
             midnight: { start: '#004e92', end: '#000428' },
@@ -178,7 +201,7 @@
             document.getElementById('themeSelect').value = name;
         }
 
-        // Init
+        // Init Theme
         const savedName = localStorage.getItem('dll-theme-name') || 'purple';
         const theme = themes[savedName];
         setTheme(savedName, theme.start, theme.end);
