@@ -56,9 +56,41 @@
         .subtitle {
             font-size: 1.1rem;
             opacity: 0.8;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             font-weight: 400;
             min-height: 1.5em;
+        }
+
+        .search-container-main {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 2.5rem auto;
+            pointer-events: auto;
+        }
+
+        .search-input-main {
+            width: 100%;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .search-input-main:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input-main::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .icons {
@@ -127,6 +159,13 @@
     <div class="content">
         <h1 class="title">dll.</h1>
         <p class="subtitle" id="randomSubtitle"></p>
+        
+        <div class="search-container-main">
+            <form id="searchForm">
+                <input type="text" class="search-input-main" placeholder="search the web with scramjet..." id="urlInput">
+            </form>
+        </div>
+
         <div class="icons">
             <a href="#" class="icon-link" title="Profile">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -168,6 +207,28 @@
         ];
         
         document.getElementById('randomSubtitle').innerText = subtitles[Math.floor(Math.random() * subtitles.length)];
+
+        // Scramjet Search Logic
+        const searchForm = document.getElementById('searchForm');
+        const urlInput = document.getElementById('urlInput');
+
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let url = urlInput.value.trim();
+            
+            if (!url) return;
+
+            // Basic URL validation/formatting
+            if (!url.includes('.') && !url.startsWith('http')) {
+                // If it's not a URL, search on Google via Scramjet
+                url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+            } else if (!url.startsWith('http')) {
+                url = `https://${url}`;
+            }
+
+            // Redirect through Scramjet (assuming standard /service/ prefix for Scramjet deployments)
+            window.location.href = `/service/${btoa(url).replace(/\//g, '_').replace(/\+/g, '-')}`;
+        });
 
         // Cloak Tab Function
         function cloakTab() {
