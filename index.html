@@ -145,6 +145,10 @@
             opacity: 1;
             transform: rotate(90deg);
         }
+
+        #bgMusic {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -188,6 +192,10 @@
         <button class="cloak-button" onclick="cloakTab()">cloak tab</button>
     </div>
 
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // Theme Persistence
         const savedStart = localStorage.getItem('dll-theme-start');
@@ -196,6 +204,27 @@
             document.documentElement.style.setProperty('--gradient-start', savedStart);
             document.documentElement.style.setProperty('--gradient-end', savedEnd);
         }
+
+        // Background Music Persistence
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Try to play music on first interaction (browser policy)
+        const playMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', playMusic);
+        };
+        document.addEventListener('click', playMusic);
+
+        // Sync music time across pages
+        setInterval(() => {
+            localStorage.setItem('dll-music-time', bgMusic.currentTime);
+        }, 1000);
+
+        window.addEventListener('load', () => {
+            const savedTime = localStorage.getItem('dll-music-time');
+            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
+            bgMusic.play().catch(() => {});
+        });
 
         // Subtitle System
         const subtitles = [
@@ -215,7 +244,9 @@
             "piracy is fun",
             "WE all drink mustard juice",
             "jackpot x lets get married x cry for me",
-            "oh my god a needih!"
+            "oh my god a needih!",
+            "music makes everything better",
+            "turn up the volume!"
         ];
         
         document.getElementById('randomSubtitle').innerText = subtitles[Math.floor(Math.random() * subtitles.length)];
