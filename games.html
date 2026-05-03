@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        #bgMusic {
+            display: none;
+        }
         :root {
             --bg-color: #1a0033;
             --gradient-start: #3a0066;
@@ -99,7 +102,7 @@
             backdrop-filter: blur(5px);
             text-decoration: none;
             color: white;
-            overflow: hidden; /* Ensures zoomed images don't spill out */
+            overflow: hidden;
             position: relative;
         }
 
@@ -113,14 +116,14 @@
         .game-thumbnail {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Changed to contain to ensure full image fits */
-            background: rgba(0, 0, 0, 0.2); /* Subtle background for letterboxing */
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 20px;
             transition: transform 0.3s ease;
         }
 
         .game-card:hover .game-thumbnail {
-            transform: scale(1.05); /* Reduced zoom for a cleaner look */
+            transform: scale(1.05);
         }
 
         .game-info {
@@ -167,6 +170,10 @@
 <body>
     <canvas id="particleCanvas"></canvas>
     
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+    </audio>
+    
     <a href="index.html" class="back-btn">← back</a>
 
     <div class="container">
@@ -175,7 +182,6 @@
         </div>
 
         <div class="games-grid" id="gamesGrid">
-            <!-- Placeholders with Image Support -->
             <a href="https://dllontop.org/gtag.html" class="game-card">
                 <img src="https://raw.githubusercontent.com/murt391/dllontop/main/gtag.png" alt="Gorilla Tag" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=GTAG'">
                 <div class="game-info">
@@ -206,18 +212,7 @@
                     <div class="game-title">BitLife</div>
                 </div>
             </a>
-            <div class="game-card">
-                <img src="game7-thumb.png" alt="game 7" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+7'">
-                <div class="game-info">
-                    <div class="game-title">game 7</div>
-                </div>
-            </div>
-            <div class="game-card">
-                <img src="game8-thumb.png" alt="game 8" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+8'">
-                <div class="game-info">
-                    <div class="game-title">game 8</div>
-                </div>
-            </div>
+            <!-- FNAE moved to end -->
             <a href="FNAE.html" class="game-card">
                 <img src="https://raw.githubusercontent.com/murt391/dllontop/main/710.png" alt="Five Night's at Epstein's" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=FNAE'">
                 <div class="game-info">
@@ -228,6 +223,22 @@
     </div>
 
     <script>
+        // Background Music Persistence
+        const bgMusic = document.getElementById('bgMusic');
+        const playMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', playMusic);
+        };
+        document.addEventListener('click', playMusic);
+        setInterval(() => {
+            localStorage.setItem('dll-music-time', bgMusic.currentTime);
+        }, 1000);
+        window.addEventListener('load', () => {
+            const savedTime = localStorage.getItem('dll-music-time');
+            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
+            bgMusic.play().catch(() => {});
+        });
+
         // Theme Persistence
         const savedStart = localStorage.getItem('dll-theme-start');
         const savedEnd = localStorage.getItem('dll-theme-end');
@@ -236,26 +247,21 @@
             document.documentElement.style.setProperty('--gradient-end', savedEnd);
         }
 
-        // Particle System (Same as main page)
+        // Particle System
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
-
         let particles = [];
         const particleCount = 150;
         const connectionDistance = 100;
         const mouseRadius = 150;
-
         let mouse = { x: null, y: null };
-
         window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
         window.addEventListener('resize', initCanvas);
-
         function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             createParticles();
         }
-
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
@@ -277,12 +283,10 @@
                 ctx.fill();
             }
         }
-
         function createParticles() {
             particles = [];
             for (let i = 0; i < particleCount; i++) particles.push(new Particle());
         }
-
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < particles.length; i++) {
@@ -311,8 +315,6 @@
             }
             requestAnimationFrame(animate);
         }
-
-        // Simple Search Logic
         document.getElementById('gameSearch').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.game-card');
@@ -321,7 +323,6 @@
                 card.style.display = title.includes(term) ? 'flex' : 'none';
             });
         });
-
         initCanvas();
         animate();
     </script>
