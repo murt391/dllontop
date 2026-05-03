@@ -67,8 +67,6 @@
             min-height: 1.5em;
         }
 
-
-
         .icons {
             display: flex;
             justify-content: center;
@@ -165,8 +163,6 @@
         <h1 class="title">dll.</h1>
         <p class="subtitle" id="randomSubtitle"></p>
         
-
-
         <div class="icons">
             <a href="#" class="icon-link" title="Profile">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -205,25 +201,24 @@
             document.documentElement.style.setProperty('--gradient-end', savedEnd);
         }
 
-        // Background Music Persistence
+        // Background Music Logic
         const bgMusic = document.getElementById('bgMusic');
         
-        // Try to play music on first interaction (browser policy)
-        const playMusic = () => {
+        const startMusic = () => {
             bgMusic.play().catch(() => {});
-            document.removeEventListener('click', playMusic);
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('keydown', startMusic);
         };
-        document.addEventListener('click', playMusic);
 
-        // Sync music time across pages
-        setInterval(() => {
-            localStorage.setItem('dll-music-time', bgMusic.currentTime);
-        }, 1000);
+        // Start music on first interaction
+        document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
 
+        // Auto-play attempt on load
         window.addEventListener('load', () => {
-            const savedTime = localStorage.getItem('dll-music-time');
-            if (savedTime) bgMusic.currentTime = parseFloat(savedTime);
-            bgMusic.play().catch(() => {});
+            bgMusic.play().catch(() => {
+                console.log("Autoplay blocked. Waiting for interaction.");
+            });
         });
 
         // Subtitle System
@@ -251,8 +246,6 @@
         
         document.getElementById('randomSubtitle').innerText = subtitles[Math.floor(Math.random() * subtitles.length)];
 
-
-
         // Cloak Tab Function
         function cloakTab() {
             const url = window.location.href;
@@ -274,8 +267,8 @@
         const ctx = canvas.getContext('2d');
 
         let particles = [];
-        const particleCount = 180; // Increased dots
-        const connectionDistance = 100; // Smaller radius
+        const particleCount = 180;
+        const connectionDistance = 100;
         const mouseRadius = 150;
 
         let mouse = {
@@ -302,7 +295,7 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5; // Slightly smaller dots
+                this.size = Math.random() * 1.5 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 0.4;
                 this.speedY = (Math.random() - 0.5) * 0.4;
             }
