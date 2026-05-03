@@ -1,63 +1,69 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #2b1055, #0b001a);
-  color: white;
+    background-color: #2e004f; /* Deep purple background */
+    background: radial-gradient(circle at center, #4a0080 0%, #1a0033 100%);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
 }
 
-#bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+#particleCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+.content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    pointer-events: none; /* Allow mouse events to pass through to canvas */
 }
 
 .title {
-  font-size: 64px;
-  letter-spacing: 2px;
-  text-shadow: 0 0 20px rgba(180,120,255,0.6);
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .subtitle {
-  margin-top: 10px;
-  opacity: 0.7;
-  font-size: 14px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
 }
 
 .icons {
-  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    pointer-events: auto; /* Re-enable pointer events for links */
 }
 
-.icon-btn {
-  background: rgba(255,255,255,0.08);
-  border: none;
-  padding: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: white;
-  transition: 0.2s;
+.icon-link {
+    color: white;
+    font-size: 2.5rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.9;
 }
 
-.icon-btn:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.icon-btn svg {
-  width: 24px;
-  height: 24px;
+.icon-link:hover {
+    transform: scale(1.1);
+    opacity: 1;
 }
