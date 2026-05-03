@@ -102,16 +102,40 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .game-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            opacity: 0.8;
+        .game-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .game-thumbnail {
+            transform: scale(1.1);
+        }
+
+        .game-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 15px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .game-info {
+            opacity: 1;
         }
 
         .game-title {
             font-weight: 400;
-            font-size: 1rem;
-            opacity: 0.9;
+            font-size: 0.9rem;
+            color: white;
+            text-align: center;
         }
 
         .back-btn {
@@ -142,38 +166,54 @@
         </div>
 
         <div class="games-grid" id="gamesGrid">
-            <!-- Placeholders -->
+            <!-- Placeholders with Image Support -->
             <a href="FNAE.html" class="game-card">
-                <div class="game-icon">🎮</div>
-                <div class="game-title">game 1</div>
+                <img src="fnae-thumb.png" alt="FNAE" class="game-thumbnail" onerror="https://github.com/murt391/dllontop/blob/main/710.png">
+                <div class="game-info">
+                    <div class="game-title">Five Night's at Epstein's</div>
+                </div>
             </a>
             <div class="game-card">
-                <div class="game-icon">🕹️</div>
-                <div class="game-title">game 2</div>
+                <img src="game2-thumb.png" alt="game 2" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+2'">
+                <div class="game-info">
+                    <div class="game-title">game 2</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">🎲</div>
-                <div class="game-title">game 3</div>
+                <img src="game3-thumb.png" alt="game 3" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+3'">
+                <div class="game-info">
+                    <div class="game-title">game 3</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">🧩</div>
-                <div class="game-title">game 4</div>
+                <img src="game4-thumb.png" alt="game 4" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+4'">
+                <div class="game-info">
+                    <div class="game-title">game 4</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">👾</div>
-                <div class="game-title">game 5</div>
+                <img src="game5-thumb.png" alt="game 5" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+5'">
+                <div class="game-info">
+                    <div class="game-title">game 5</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">🚀</div>
-                <div class="game-title">game 6</div>
+                <img src="game6-thumb.png" alt="game 6" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+6'">
+                <div class="game-info">
+                    <div class="game-title">game 6</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">⚔️</div>
-                <div class="game-title">game 7</div>
+                <img src="game7-thumb.png" alt="game 7" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+7'">
+                <div class="game-info">
+                    <div class="game-title">game 7</div>
+                </div>
             </div>
             <div class="game-card">
-                <div class="game-icon">🏎️</div>
-                <div class="game-title">game 8</div>
+                <img src="game8-thumb.png" alt="game 8" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=game+8'">
+                <div class="game-info">
+                    <div class="game-title">game 8</div>
+                </div>
             </div>
         </div>
     </div>
