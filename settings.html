@@ -51,41 +51,49 @@
             border-radius: 30px;
             padding: 40px;
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
             text-align: center;
         }
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 700;
         }
 
-        .themes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
+        .setting-group {
             margin-bottom: 30px;
+            text-align: left;
         }
 
-        .theme-option {
-            padding: 15px;
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .theme-select {
+            width: 100%;
+            padding: 12px 20px;
             border-radius: 15px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
             background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
         }
 
-        .theme-option:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .theme-option.active {
-            border-color: white;
-            background: rgba(255, 255, 255, 0.25);
+        .theme-select option {
+            background: #1a0033;
+            color: white;
         }
 
         .back-btn {
@@ -99,60 +107,81 @@
         .back-btn:hover {
             color: white;
         }
-
-        /* Theme Definitions */
-        .theme-purple { background: #3a0066; }
-        .theme-midnight { background: #000428; }
-        .theme-forest { background: #002b1c; }
-        .theme-ocean { background: #00394d; }
-        .theme-sunset { background: #4d0000; }
-        .theme-void { background: #111111; }
-        .theme-nebula { background: #2d004d; }
-
     </style>
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
 
     <div class="settings-card">
-        <h1>themes</h1>
-        <div class="themes-grid">
-            <div class="theme-option active" onclick="setTheme('purple', '#3a0066', '#0d001a')">original</div>
-            <div class="theme-option" onclick="setTheme('midnight', '#004e92', '#000428')">midnight</div>
-            <div class="theme-option" onclick="setTheme('forest', '#004d33', '#001a11')">forest</div>
-            <div class="theme-option" onclick="setTheme('ocean', '#0077be', '#002b4d')">ocean</div>
-            <div class="theme-option" onclick="setTheme('sunset', '#8b0000', '#330000')">sunset</div>
-            <div class="theme-option" onclick="setTheme('void', '#333333', '#000000')">void</div>
-            <div class="theme-option" onclick="setTheme('nebula', '#6a008a', '#2d004d')">nebula</div>
+        <h1>settings</h1>
+        
+        <div class="setting-group">
+            <label for="themeSelect">choose theme</label>
+            <select id="themeSelect" class="theme-select" onchange="handleThemeChange(this.value)">
+                <option value="purple">original (purple)</option>
+                <option value="midnight">midnight blue</option>
+                <option value="forest">deep forest</option>
+                <option value="ocean">ocean breeze</option>
+                <option value="sunset">crimson sunset</option>
+                <option value="void">the void</option>
+                <option value="nebula">cosmic nebula</option>
+                <option value="emerald">emerald city</option>
+                <option value="rose">rose petal</option>
+                <option value="gold">golden hour</option>
+                <option value="cyber">cyberpunk</option>
+                <option value="arctic">arctic frost</option>
+                <option value="lava">lava flow</option>
+                <option value="toxic">toxic waste</option>
+                <option value="space">deep space</option>
+                <option value="candy">cotton candy</option>
+                <option value="royal">royal velvet</option>
+            </select>
         </div>
+
         <a href="index.html" class="back-btn">← back to home</a>
     </div>
 
     <script>
+        const themes = {
+            purple: { start: '#3a0066', end: '#0d001a' },
+            midnight: { start: '#004e92', end: '#000428' },
+            forest: { start: '#004d33', end: '#001a11' },
+            ocean: { start: '#0077be', end: '#002b4d' },
+            sunset: { start: '#8b0000', end: '#330000' },
+            void: { start: '#333333', end: '#000000' },
+            nebula: { start: '#6a008a', end: '#2d004d' },
+            emerald: { start: '#008f39', end: '#002b11' },
+            rose: { start: '#e0115f', end: '#4d001a' },
+            gold: { start: '#d4af37', end: '#4d3d00' },
+            cyber: { start: '#ff00ff', end: '#000033' },
+            arctic: { start: '#00ffff', end: '#003333' },
+            lava: { start: '#ff4500', end: '#330e00' },
+            toxic: { start: '#39ff14', end: '#0d3300' },
+            space: { start: '#1b2735', end: '#090a0f' },
+            candy: { start: '#ff69b4', end: '#ffc0cb' },
+            royal: { start: '#4b0082', end: '#1a0033' }
+        };
+
+        function handleThemeChange(themeKey) {
+            const theme = themes[themeKey];
+            if (theme) {
+                setTheme(themeKey, theme.start, theme.end);
+            }
+        }
+
         function setTheme(name, start, end) {
-            // Update CSS Variables
             document.documentElement.style.setProperty('--gradient-start', start);
             document.documentElement.style.setProperty('--gradient-end', end);
-            
-            // Save to LocalStorage
             localStorage.setItem('dll-theme-start', start);
             localStorage.setItem('dll-theme-end', end);
             localStorage.setItem('dll-theme-name', name);
-
-            // Update Active State
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                opt.classList.remove('active');
-                if (opt.innerText.toLowerCase() === name) opt.classList.add('active');
-            });
+            document.getElementById('themeSelect').value = name;
         }
 
-        // Load Theme on Init
-        const savedStart = localStorage.getItem('dll-theme-start');
-        const savedEnd = localStorage.getItem('dll-theme-end');
-        const savedName = localStorage.getItem('dll-theme-name');
-        if (savedStart && savedEnd) {
-            setTheme(savedName, savedStart, savedEnd);
-        }
+        // Init
+        const savedName = localStorage.getItem('dll-theme-name') || 'purple';
+        const theme = themes[savedName];
+        setTheme(savedName, theme.start, theme.end);
 
         // Particle System
         const canvas = document.getElementById('particleCanvas');
