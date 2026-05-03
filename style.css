@@ -1,6 +1,6 @@
 body {
-  margin: 0;
+  overflow: hidden;
   font-family: Arial, sans-serif;
-  display: flex;
-  background: #e6f5e6;
+  background: radial-gradient(circle at top, #2b1055, #0b001a);
+  color: white;
 }
