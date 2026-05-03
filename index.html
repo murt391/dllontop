@@ -1,13 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dllontop</title>
-</head>
-<body>
-  <h1>Welcome to my website</h1>
+  <meta charset="UTF-8">
+  <title>DLLONTOP SYSTEM</title>
 
-  <button onclick="window.location.href='https://google.com'">
-    Click Me
-  </button>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #00ff88;
+      font-family: "Courier New", monospace;
+      text-align: center;
+    }
+
+    /* Glow effect */
+    h1, h2, p {
+      text-shadow: 0 0 10px #00ff88;
+    }
+
+    .container {
+      margin-top: 10vh;
+    }
+
+    .box {
+      display: inline-block;
+      padding: 20px;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 20px #00ff88;
+      border-radius: 10px;
+      background-color: rgba(0, 255, 136, 0.05);
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: black;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      cursor: pointer;
+      font-family: monospace;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #00ff88;
+      color: black;
+      box-shadow: 0 0 15px #00ff88;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #00ff88;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    img {
+      margin-top: 20px;
+      width: 150px;
+      border: 2px solid #00ff88;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ff88;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="box">
+      <h1>DLLONTOP SYSTEM ONLINE</h1>
+      <h2>ACCESS GRANTED</h2>
+
+      <p>Initializing interface<span class="cursor"></span></p>
+
+      <img src="https://via.placeholder.com/150" alt="avatar">
+
+      <br>
+
+      <button onclick="alert('SYSTEM RUNNING')">
+        RUN DIAGNOSTIC
+      </button>
+
+      <button onclick="window.location.href='https://google.com'">
+        ENTER SYSTEM
+      </button>
+    </div>
+
+  </div>
+
 </body>
 </html>
