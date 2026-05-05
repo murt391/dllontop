@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll. | apps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        #bgMusic {
+            display: none;
+        }
+        :root {
+            --bg-color: #1a0033;
+            --gradient-start: #3a0066;
+            --gradient-end: #0d001a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            font-family: 'Fredoka', sans-serif;
+            color: white;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: block;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 50px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .app-card {
+            aspect-ratio: 1 / 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
+            text-decoration: none;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .app-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .app-card:hover .app-thumbnail {
+            transform: scale(1.05);
+        }
+
+        .app-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 15px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-card:hover .app-info {
+            opacity: 1;
+        }
+
+        .app-title {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: white;
+            text-align: center;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+            color: white;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    
+    <audio id="bgMusic" loop>
+        <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+    </audio>
+    
+    <a href="index.html" class="back-btn">← back</a>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="search apps..." id="appSearch">
+        </div>
+
+        <div class="apps-grid" id="appsGrid">
+            <!-- Placeholder for apps -->
+            <div class="app-card">
+                <div class="app-title">No apps added yet</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Persistence
+        const savedStart = localStorage.getItem('dll-theme-start');
+        const savedEnd = localStorage.getItem('dll-theme-end');
+        if (savedStart && savedEnd) {
+            document.documentElement.style.setProperty('--gradient-start', savedStart);
+            document.documentElement.style.setProperty('--gradient-end', savedEnd);
+        }
+
+        // Background Music Logic
+        const bgMusic = document.getElementById('bgMusic');
+        const musicSource = document.getElementById('musicSource');
+        
+        const savedMusic = localStorage.getItem('dll-music-url');
+        if (savedMusic) {
+            musicSource.src = savedMusic;
+            bgMusic.load();
+        }
+        
+        const savedVolume = localStorage.getItem('dll-music-volume');
+        if (savedVolume !== null) {
+            bgMusic.volume = parseFloat(savedVolume);
+        }
+
+        const startMusic = () => {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', startMusic);
+        };
+        document.addEventListener('click', startMusic);
+
+        // Particle System
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 150;
+        const connectionDistance = 100;
+        const mouseRadius = 150;
+        let mouse = { x: null, y: null };
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('resize', initCanvas);
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = particles[i].x - mouse.x;
+                    let dy = particles[i].y - mouse.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouseRadius) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            let dx2 = particles[i].x - particles[j].x;
+                            let dy2 = particles[i].y - particles[j].y;
+                            let dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                            if (dist2 < connectionDistance) {
+                                ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist2 / connectionDistance) * 0.5})`;
+                                ctx.lineWidth = 0.4;
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        document.getElementById('appSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+            cards.forEach(card => {
+                const title = card.querySelector('.app-title')?.innerText.toLowerCase();
+                if (title) card.style.display = title.includes(term) ? 'flex' : 'none';
+            });
+        });
+        initCanvas();
+        animate();
+    </script>
+</body>
+</html>
