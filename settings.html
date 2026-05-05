@@ -56,6 +56,8 @@
             width: 90%;
             max-width: 450px;
             text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         h1 {
@@ -65,7 +67,7 @@
         }
 
         .setting-group {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-align: left;
         }
 
@@ -76,7 +78,7 @@
             opacity: 0.8;
         }
 
-        .theme-select {
+        .theme-select, .audio-select {
             width: 100%;
             padding: 12px 20px;
             border-radius: 15px;
@@ -94,9 +96,28 @@
             background-size: 15px;
         }
 
-        .theme-select option {
+        .theme-select option, .audio-select option {
             background: #1a0033;
             color: white;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
         }
 
         .back-btn {
@@ -116,7 +137,7 @@
     <canvas id="particleCanvas"></canvas>
     
     <audio id="bgMusic" loop>
-        <source src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+        <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
     </audio>
 
     <div class="settings-card">
@@ -145,23 +166,71 @@
             </select>
         </div>
 
+        <div class="setting-group">
+            <label for="audioSelect">background music</label>
+            <select id="audioSelect" class="audio-select" onchange="handleAudioChange(this.value)">
+                <!-- Audio options will be populated by JS -->
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label for="volumeSlider">volume</label>
+            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" oninput="handleVolumeChange(this.value)">
+        </div>
+
         <a href="index.html" class="back-btn">← back to home</a>
     </div>
 
     <script>
-        // Background Music Logic
         const bgMusic = document.getElementById('bgMusic');
+        const musicSource = document.getElementById('musicSource');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const audioSelect = document.getElementById('audioSelect');
+
+        // Audio Table
+        const audioTracks = {
+            default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
+            lofi: { name: "Lofi Beats", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            chill: { name: "Chill Vibes", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            none: { name: "None (Mute)", url: "" }
+        };
+
+        // Populate Audio Dropdown
+        Object.keys(audioTracks).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = audioTracks[key].name;
+            audioSelect.appendChild(option);
+        });
+
+        // Background Music Logic
         const startMusic = () => {
             bgMusic.play().catch(() => {});
             document.removeEventListener('click', startMusic);
-            document.removeEventListener('keydown', startMusic);
         };
         document.addEventListener('click', startMusic);
-        document.addEventListener('keydown', startMusic);
-        window.addEventListener('load', () => {
-            bgMusic.play().catch(() => {});
-        });
 
+        function handleAudioChange(key) {
+            const track = audioTracks[key];
+            if (track.url) {
+                musicSource.src = track.url;
+                bgMusic.load();
+                bgMusic.play().catch(() => {});
+                localStorage.setItem('dll-music-url', track.url);
+                localStorage.setItem('dll-music-key', key);
+            } else {
+                bgMusic.pause();
+                localStorage.setItem('dll-music-url', '');
+                localStorage.setItem('dll-music-key', 'none');
+            }
+        }
+
+        function handleVolumeChange(val) {
+            bgMusic.volume = val;
+            localStorage.setItem('dll-music-volume', val);
+        }
+
+        // Theme Logic
         const themes = {
             purple: { start: '#3a0066', end: '#0d001a' },
             midnight: { start: '#004e92', end: '#000428' },
@@ -198,10 +267,26 @@
             document.getElementById('themeSelect').value = name;
         }
 
-        // Init Theme
-        const savedName = localStorage.getItem('dll-theme-name') || 'purple';
-        const theme = themes[savedName];
-        setTheme(savedName, theme.start, theme.end);
+        // Init Settings
+        window.addEventListener('load', () => {
+            // Theme
+            const savedName = localStorage.getItem('dll-theme-name') || 'purple';
+            const theme = themes[savedName];
+            setTheme(savedName, theme.start, theme.end);
+
+            // Volume
+            const savedVolume = localStorage.getItem('dll-music-volume') || 0.5;
+            bgMusic.volume = savedVolume;
+            volumeSlider.value = savedVolume;
+
+            // Audio Track
+            const savedAudioKey = localStorage.getItem('dll-music-key') || 'default';
+            audioSelect.value = savedAudioKey;
+            if (savedAudioKey !== 'none') {
+                musicSource.src = audioTracks[savedAudioKey].url;
+                bgMusic.load();
+            }
+        });
 
         // Particle System
         const canvas = document.getElementById('particleCanvas');
