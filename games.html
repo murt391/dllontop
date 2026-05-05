@@ -6,17 +6,8 @@
     <title>dll. | games</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
     <style>
-        #bgMusic {
-            display: none;
-        }
-        :root {
-            --bg-color: #1a0033;
-            --gradient-start: #3a0066;
-            --gradient-end: #0d001a;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -24,23 +15,24 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
+            background-size: cover;
             height: 100vh;
             width: 100vw;
             overflow-x: hidden;
-            font-family: 'Fredoka', sans-serif;
+            font-family: 'Calistoga', serif;
             color: white;
         }
 
-        #particleCanvas {
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1;
-            display: block;
         }
 
         .container {
@@ -66,19 +58,19 @@
             padding: 15px 25px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             color: white;
-            font-family: 'Fredoka', sans-serif;
+            font-family: 'Calistoga', serif;
             font-size: 1.1rem;
             outline: none;
             transition: all 0.3s ease;
         }
 
         .search-bar:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.6);
+            border-color: #b4a1ff;
+            box-shadow: 0 0 20px rgba(180, 161, 255, 0.2);
         }
 
         .games-grid {
@@ -90,7 +82,7 @@
 
         .game-card {
             aspect-ratio: 1 / 1;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             display: flex;
@@ -108,9 +100,9 @@
 
         .game-card:hover {
             transform: scale(1.05) translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            border-color: #b4a1ff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .game-thumbnail {
@@ -131,7 +123,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
             padding: 15px;
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
@@ -157,19 +149,19 @@
             z-index: 3;
             color: white;
             text-decoration: none;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .back-btn:hover {
             opacity: 1;
+            color: #b4a1ff;
         }
     </style>
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
-    
     <audio id="bgMusic" loop>
         <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
     </audio>
@@ -458,14 +450,6 @@
     </div>
 
     <script>
-        // Theme Persistence
-        const savedStart = localStorage.getItem('dll-theme-start');
-        const savedEnd = localStorage.getItem('dll-theme-end');
-        if (savedStart && savedEnd) {
-            document.documentElement.style.setProperty('--gradient-start', savedStart);
-            document.documentElement.style.setProperty('--gradient-end', savedEnd);
-        }
-
         // Background Music Logic
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
@@ -487,74 +471,6 @@
         };
         document.addEventListener('click', startMusic);
 
-        // Particle System
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = 150;
-        const connectionDistance = 100;
-        const mouseRadius = 150;
-        let mouse = { x: null, y: null };
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-        window.addEventListener('resize', initCanvas);
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            createParticles();
-        }
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        function createParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-        }
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (mouse.x !== null && mouse.y !== null) {
-                    let dx = particles[i].x - mouse.x;
-                    let dy = particles[i].y - mouse.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < mouseRadius) {
-                        for (let j = i + 1; j < particles.length; j++) {
-                            let dx2 = particles[i].x - particles[j].x;
-                            let dy2 = particles[i].y - particles[j].y;
-                            let dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-                            if (dist2 < connectionDistance) {
-                                ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist2 / connectionDistance) * 0.5})`;
-                                ctx.lineWidth = 0.4;
-                                ctx.beginPath();
-                                ctx.moveTo(particles[i].x, particles[i].y);
-                                ctx.lineTo(particles[j].x, particles[j].y);
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
         document.getElementById('gameSearch').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.game-card');
@@ -563,8 +479,6 @@
                 card.style.display = title.includes(term) ? 'flex' : 'none';
             });
         });
-        initCanvas();
-        animate();
     </script>
 </body>
 </html>
