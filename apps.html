@@ -81,14 +81,14 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
-        .apps-grid {
+        .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
             width: 100%;
         }
 
-        .app-card {
+        .game-card {
             aspect-ratio: 1 / 1;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -106,14 +106,14 @@
             position: relative;
         }
 
-        .app-card:hover {
+        .game-card:hover {
             transform: scale(1.05) translateY(-5px);
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .app-thumbnail {
+        .game-thumbnail {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -122,11 +122,11 @@
             transition: transform 0.3s ease;
         }
 
-        .app-card:hover .app-thumbnail {
+        .game-card:hover .game-thumbnail {
             transform: scale(1.05);
         }
 
-        .app-info {
+        .game-info {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -139,11 +139,11 @@
             transition: opacity 0.3s ease;
         }
 
-        .app-card:hover .app-info {
+        .game-card:hover .game-info {
             opacity: 1;
         }
 
-        .app-title {
+        .game-title {
             font-weight: 400;
             font-size: 0.9rem;
             color: white;
@@ -178,14 +178,14 @@
 
     <div class="container">
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="search apps..." id="appSearch">
+            <input type="text" class="search-bar" placeholder="search apps..." id="gameSearch">
         </div>
 
-        <div class="apps-grid" id="appsGrid">
-            <!-- Placeholder for apps -->
-            <div class="app-card">
-                <div class="app-title">No apps added yet</div>
-            </div>
+        <div class="games-grid" id="gamesGrid">
+            <a href="Soundboard.html" class="game-card">
+                <img src="https://raw.githubusercontent.com/murt391/dllontop/main/179.png" alt="Soundboard" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=soundboard'">
+                <div class="game-info"><div class="game-title">Soundboard</div></div>
+            </a>
         </div>
     </div>
 
@@ -287,12 +287,12 @@
             }
             requestAnimationFrame(animate);
         }
-        document.getElementById('appSearch').addEventListener('input', (e) => {
+        document.getElementById('gameSearch').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.app-card');
+            const cards = document.querySelectorAll('.game-card');
             cards.forEach(card => {
-                const title = card.querySelector('.app-title')?.innerText.toLowerCase();
-                if (title) card.style.display = title.includes(term) ? 'flex' : 'none';
+                const title = card.querySelector('.game-title').innerText.toLowerCase();
+                card.style.display = title.includes(term) ? 'flex' : 'none';
             });
         });
         initCanvas();
