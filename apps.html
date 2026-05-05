@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dll. | apps</title>
+    <title>dll. | games</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
@@ -73,14 +73,14 @@
             box-shadow: 0 0 20px rgba(180, 161, 255, 0.2);
         }
 
-        .apps-grid {
+        .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
             width: 100%;
         }
 
-        .app-card {
+        .game-card {
             aspect-ratio: 1 / 1;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -98,16 +98,46 @@
             position: relative;
         }
 
-        .app-card:hover {
+        .game-card:hover {
             transform: scale(1.05) translateY(-5px);
             background: rgba(0, 0, 0, 0.6);
             border-color: #b4a1ff;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .app-title {
+        .game-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .game-thumbnail {
+            transform: scale(1.05);
+        }
+
+        .game-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 15px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .game-info {
+            opacity: 1;
+        }
+
+        .game-title {
             font-weight: 400;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             color: white;
             text-align: center;
         }
@@ -140,10 +170,10 @@
 
     <div class="container">
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="search apps..." id="appSearch">
+            <input type="text" class="search-bar" placeholder="search apps..." id="gameSearch">
         </div>
 
-        <div class="apps-grid" id="appsGrid">
+        <div class="games-grid" id="gamesGrid">
             <a href="Soundboard.html" class="game-card">
                 <img src="https://raw.githubusercontent.com/murt391/dllontop/main/179.png" alt="Soundboard" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=soundboard'">
                 <div class="game-info"><div class="game-title">Soundboard</div></div>
@@ -173,12 +203,12 @@
         };
         document.addEventListener('click', startMusic);
 
-        document.getElementById('appSearch').addEventListener('input', (e) => {
+        document.getElementById('gameSearch').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.app-card');
+            const cards = document.querySelectorAll('.game-card');
             cards.forEach(card => {
-                const title = card.querySelector('.app-title')?.innerText.toLowerCase();
-                if (title) card.style.display = title.includes(term) ? 'flex' : 'none';
+                const title = card.querySelector('.game-title').innerText.toLowerCase();
+                card.style.display = title.includes(term) ? 'flex' : 'none';
             });
         });
     </script>
