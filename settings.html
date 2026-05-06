@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dll. | settings</title>
+    <title>dll | settings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
@@ -25,6 +25,11 @@
             align-items: center;
             font-family: 'Calistoga', serif;
             color: white;
+            transition: background 0.5s ease;
+        }
+
+        body.classic-design {
+            background: radial-gradient(circle at center, #3a0066 0%, #0d001a 100%);
         }
 
         body::before {
@@ -36,6 +41,25 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1;
+            transition: background 0.5s ease;
+        }
+
+        body.classic-design::before {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: none;
+        }
+
+        #particleCanvas.show {
+            display: block;
         }
 
         .settings-card {
@@ -49,6 +73,12 @@
             width: 100%;
             max-width: 500px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        body.classic-design .settings-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
         }
 
         h1 {
@@ -56,6 +86,11 @@
             margin-bottom: 30px;
             text-align: center;
             color: #b4a1ff;
+            transition: color 0.5s ease;
+        }
+
+        body.classic-design h1 {
+            color: white;
         }
 
         .setting-group {
@@ -79,11 +114,44 @@
             font-family: 'Calistoga', serif;
             outline: none;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         select option {
             background: #1a1a1a;
             color: white;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: 'Calistoga', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: capitalize;
+        }
+
+        .toggle-btn.active {
+            background: #b4a1ff;
+            color: #000;
+            border-color: #b4a1ff;
+            font-weight: bold;
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: rgba(180, 161, 255, 0.1);
+            border-color: #b4a1ff;
         }
 
         .back-btn {
@@ -116,6 +184,8 @@
     </style>
 </head>
 <body>
+    <canvas id="particleCanvas"></canvas>
+
     <audio id="bgMusic" loop>
         <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
     </audio>
@@ -124,13 +194,19 @@
         <h1>settings</h1>
 
         <div class="setting-group">
+            <label>design</label>
+            <div class="toggle-group">
+                <button class="toggle-btn active" data-design="new">new</button>
+                <button class="toggle-btn" data-design="classic">classic</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
             <label for="musicSelect">background music</label>
             <select id="musicSelect">
                 <option value="default">Default Music</option>
-                <option value="lofi">Wii Menu</option>
-                <option value="chill">Wii Shop</option>
-                <option value="charlie">Charlie Kirk Funk</option>
-                <option value="hamood">hamood habibi</option>
+                <option value="lofi">Lofi Beats</option>
+                <option value="chill">Chill Vibes</option>
                 <option value="none">None (Mute)</option>
             </select>
         </div>
@@ -148,19 +224,21 @@
         const musicSource = document.getElementById('musicSource');
         const musicSelect = document.getElementById('musicSelect');
         const volumeSlider = document.getElementById('volumeSlider');
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const canvas = document.getElementById('particleCanvas');
+        const body = document.body;
 
         const audioTracks = {
             default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
-            lofi: { name: "Wii Menu", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii.mp3" },
-            chill: { name: "Wii Shop", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii2.mp3" },
-            charlie: { name: "charlie kirk funk", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/charlie-kirky-funk.mp3" },
-            hamood: { name: "hamood habibi", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/HAMOOD HABIBI FUNK.mp3" },
+            lofi: { name: "Lofi Beats", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            chill: { name: "Chill Vibes", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
             none: { name: "None (Mute)", url: "" }
         };
 
         // Load saved settings
         const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
         const savedVolume = localStorage.getItem('dll-music-volume') || "1";
+        const savedDesign = localStorage.getItem('dll-design') || 'new';
 
         musicSource.src = savedMusic;
         bgMusic.volume = parseFloat(savedVolume);
@@ -172,6 +250,36 @@
                 musicSelect.value = key;
             }
         }
+
+        // Design Toggle
+        function setDesign(design) {
+            localStorage.setItem('dll-design', design);
+            
+            if (design === 'classic') {
+                body.classList.add('classic-design');
+                canvas.classList.add('show');
+                initParticles();
+            } else {
+                body.classList.remove('classic-design');
+                canvas.classList.remove('show');
+            }
+
+            toggleBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.design === design) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setDesign(btn.dataset.design);
+            });
+        });
+
+        // Initialize design
+        setDesign(savedDesign);
 
         // Music selection change
         musicSelect.addEventListener('change', (e) => {
@@ -199,6 +307,64 @@
             document.removeEventListener('click', startMusic);
         };
         document.addEventListener('click', startMusic);
+
+        // Particle System for Classic Design
+        let particles = [];
+        const particleCount = 100;
+
+        function initParticles() {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            animate(ctx);
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+            draw(ctx) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate(ctx) {
+            if (!canvas.classList.contains('show')) {
+                requestAnimationFrame(() => animate(ctx));
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw(ctx);
+            }
+            requestAnimationFrame(() => animate(ctx));
+        }
+
+        window.addEventListener('resize', () => {
+            if (canvas.classList.contains('show')) {
+                initParticles();
+            }
+        });
     </script>
 </body>
 </html>
