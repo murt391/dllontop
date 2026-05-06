@@ -6,17 +6,8 @@
     <title>dll. | settings</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
     <style>
-        #bgMusic {
-            display: none;
-        }
-        :root {
-            --bg-color: #1a0033;
-            --gradient-start: #3a0066;
-            --gradient-end: #0d001a;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -24,170 +15,138 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
+            background-size: cover;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            font-family: 'Fredoka', sans-serif;
-            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Calistoga', serif;
+            color: white;
         }
 
-        #particleCanvas {
-            position: fixed;
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
 
         .settings-card {
             position: relative;
             z-index: 2;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 40px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            max-height: 90vh;
-            overflow-y: auto;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #b4a1ff;
         }
 
         .setting-group {
             margin-bottom: 25px;
-            text-align: left;
         }
 
         label {
             display: block;
             margin-bottom: 10px;
             font-size: 1.1rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
-        .theme-select, .audio-select {
+        select, input[type="range"] {
             width: 100%;
-            padding: 12px 20px;
+            padding: 12px;
             border-radius: 15px;
-            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             color: white;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1rem;
+            font-family: 'Calistoga', serif;
             outline: none;
             cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 15px;
         }
 
-        .theme-select option, .audio-select option {
-            background: #1a0033;
+        select option {
+            background: #1a1a1a;
             color: white;
-        }
-
-        .volume-slider {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            outline: none;
-            appearance: none;
-            cursor: pointer;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
         }
 
         .back-btn {
-            display: inline-block;
-            margin-top: 10px;
-            color: rgba(255, 255, 255, 0.6);
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 15px;
+            border: none;
+            background: #b4a1ff;
+            color: #000;
+            font-family: 'Calistoga', serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .back-btn:hover {
-            color: white;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(180, 161, 255, 0.4);
+        }
+
+        #bgMusic {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
-    
     <audio id="bgMusic" loop>
         <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
     </audio>
 
     <div class="settings-card">
         <h1>settings</h1>
-        
-        <div class="setting-group">
-            <label for="themeSelect">choose theme</label>
-            <select id="themeSelect" class="theme-select" onchange="handleThemeChange(this.value)">
-                <option value="purple">original (purple)</option>
-                <option value="midnight">midnight blue</option>
-                <option value="forest">deep forest</option>
-                <option value="ocean">ocean breeze</option>
-                <option value="sunset">crimson sunset</option>
-                <option value="void">the void</option>
-                <option value="nebula">cosmic nebula</option>
-                <option value="emerald">emerald city</option>
-                <option value="rose">rose petal</option>
-                <option value="gold">golden hour</option>
-                <option value="cyber">cyberpunk</option>
-                <option value="arctic">arctic frost</option>
-                <option value="lava">lava flow</option>
-                <option value="toxic">toxic waste</option>
-                <option value="space">deep space</option>
-                <option value="candy">cotton candy</option>
-                <option value="royal">royal velvet</option>
-            </select>
-        </div>
 
         <div class="setting-group">
-            <label for="audioSelect">background music</label>
-            <select id="audioSelect" class="audio-select" onchange="handleAudioChange(this.value)">
-                <!-- Audio options will be populated by JS -->
+            <label for="musicSelect">background music</label>
+            <select id="musicSelect">
+                <option value="default">Default Music</option>
+                <option value="lofi">Lofi Beats</option>
+                <option value="chill">Chill Vibes</option>
+                <option value="none">None (Mute)</option>
             </select>
         </div>
 
         <div class="setting-group">
             <label for="volumeSlider">volume</label>
-            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" oninput="handleVolumeChange(this.value)">
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
         </div>
 
-        <a href="index.html" class="back-btn">← back to home</a>
+        <a href="index.html" class="back-btn">back to home</a>
     </div>
 
     <script>
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
+        const musicSelect = document.getElementById('musicSelect');
         const volumeSlider = document.getElementById('volumeSlider');
-        const audioSelect = document.getElementById('audioSelect');
 
-        // Audio Table
         const audioTracks = {
             default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
             lofi: { name: "Wii Menu", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii.mp3" },
@@ -195,145 +154,47 @@
             none: { name: "None (Mute)", url: "" }
         };
 
-        // Populate Audio Dropdown
-        Object.keys(audioTracks).forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = audioTracks[key].name;
-            audioSelect.appendChild(option);
+        // Load saved settings
+        const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
+        const savedVolume = localStorage.getItem('dll-music-volume') || "1";
+
+        musicSource.src = savedMusic;
+        bgMusic.volume = parseFloat(savedVolume);
+        volumeSlider.value = savedVolume;
+
+        // Set select value
+        for (const key in audioTracks) {
+            if (audioTracks[key].url === savedMusic) {
+                musicSelect.value = key;
+            }
+        }
+
+        // Music selection change
+        musicSelect.addEventListener('change', (e) => {
+            const track = audioTracks[e.target.value];
+            if (track.url) {
+                musicSource.src = track.url;
+                localStorage.setItem('dll-music-url', track.url);
+                bgMusic.load();
+                bgMusic.play().catch(() => {});
+            } else {
+                bgMusic.pause();
+                localStorage.setItem('dll-music-url', '');
+            }
         });
 
-        // Background Music Logic
+        // Volume change
+        volumeSlider.addEventListener('input', (e) => {
+            const vol = e.target.value;
+            bgMusic.volume = parseFloat(vol);
+            localStorage.setItem('dll-music-volume', vol);
+        });
+
         const startMusic = () => {
             bgMusic.play().catch(() => {});
             document.removeEventListener('click', startMusic);
         };
         document.addEventListener('click', startMusic);
-
-        function handleAudioChange(key) {
-            const track = audioTracks[key];
-            if (track.url) {
-                musicSource.src = track.url;
-                bgMusic.load();
-                bgMusic.play().catch(() => {});
-                localStorage.setItem('dll-music-url', track.url);
-                localStorage.setItem('dll-music-key', key);
-            } else {
-                bgMusic.pause();
-                localStorage.setItem('dll-music-url', '');
-                localStorage.setItem('dll-music-key', 'none');
-            }
-        }
-
-        function handleVolumeChange(val) {
-            bgMusic.volume = val;
-            localStorage.setItem('dll-music-volume', val);
-        }
-
-        // Theme Logic
-        const themes = {
-            purple: { start: '#3a0066', end: '#0d001a' },
-            midnight: { start: '#004e92', end: '#000428' },
-            forest: { start: '#004d33', end: '#001a11' },
-            ocean: { start: '#0077be', end: '#002b4d' },
-            sunset: { start: '#8b0000', end: '#330000' },
-            void: { start: '#333333', end: '#000000' },
-            nebula: { start: '#6a008a', end: '#2d004d' },
-            emerald: { start: '#008f39', end: '#002b11' },
-            rose: { start: '#e0115f', end: '#4d001a' },
-            gold: { start: '#d4af37', end: '#4d3d00' },
-            cyber: { start: '#ff00ff', end: '#000033' },
-            arctic: { start: '#00ffff', end: '#003333' },
-            lava: { start: '#ff4500', end: '#330e00' },
-            toxic: { start: '#39ff14', end: '#0d3300' },
-            space: { start: '#1b2735', end: '#090a0f' },
-            candy: { start: '#ff69b4', end: '#ffc0cb' },
-            royal: { start: '#4b0082', end: '#1a0033' }
-        };
-
-        function handleThemeChange(themeKey) {
-            const theme = themes[themeKey];
-            if (theme) {
-                setTheme(themeKey, theme.start, theme.end);
-            }
-        }
-
-        function setTheme(name, start, end) {
-            document.documentElement.style.setProperty('--gradient-start', start);
-            document.documentElement.style.setProperty('--gradient-end', end);
-            localStorage.setItem('dll-theme-start', start);
-            localStorage.setItem('dll-theme-end', end);
-            localStorage.setItem('dll-theme-name', name);
-            document.getElementById('themeSelect').value = name;
-        }
-
-        // Init Settings
-        window.addEventListener('load', () => {
-            // Theme
-            const savedName = localStorage.getItem('dll-theme-name') || 'purple';
-            const theme = themes[savedName];
-            setTheme(savedName, theme.start, theme.end);
-
-            // Volume
-            const savedVolume = localStorage.getItem('dll-music-volume') || 0.5;
-            bgMusic.volume = savedVolume;
-            volumeSlider.value = savedVolume;
-
-            // Audio Track
-            const savedAudioKey = localStorage.getItem('dll-music-key') || 'default';
-            audioSelect.value = savedAudioKey;
-            if (savedAudioKey !== 'none') {
-                musicSource.src = audioTracks[savedAudioKey].url;
-                bgMusic.load();
-            }
-        });
-
-        // Particle System
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = 100;
-        window.addEventListener('resize', initCanvas);
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            createParticles();
-        }
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        function createParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-        }
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            requestAnimationFrame(animate);
-        }
-        initCanvas();
-        animate();
     </script>
 </body>
 </html>
