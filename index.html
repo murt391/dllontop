@@ -28,11 +28,6 @@
             align-items: center;
             font-family: 'Calistoga', serif;
             color: white;
-            transition: background 0.5s ease;
-        }
-
-        body.classic-design {
-            background: radial-gradient(circle at center, #3a0066 0%, #0d001a 100%);
         }
 
         body::before {
@@ -44,26 +39,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.4);
             z-index: 1;
-            transition: background 0.5s ease;
             pointer-events: none;
-        }
-
-        body.classic-design::before {
-            background: rgba(0, 0, 0, 0);
-        }
-
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            display: none;
-        }
-
-        #particleCanvas.show {
-            display: block;
         }
 
         .content {
@@ -79,7 +55,6 @@
             margin-bottom: 0.2rem;
             letter-spacing: 4px;
             text-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            transition: color 0.5s ease;
         }
 
         .title span.d { 
@@ -145,11 +120,6 @@
             gap: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             pointer-events: auto;
-            transition: all 0.5s ease;
-        }
-
-        body.classic-design .bottom-bar {
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .bar-link {
@@ -207,40 +177,12 @@
             transform: translateY(-2px);
         }
 
-        .settings-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
-            color: white;
-            opacity: 0.8;
-            transition: all 0.3s ease;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-        }
-
-        .settings-btn:hover {
-            opacity: 1;
-            color: #b4a1ff;
-            transform: rotate(90deg);
-        }
-
         #bgMusic {
             display: none;
         }
     </style>
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
-
-    <a href="settings.html" class="settings-btn" title="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-    </a>
-    
     <div class="content">
         <h1 class="title"><span class="d">d</span><span class="ll">ll</span></h1>
         <p class="subtitle" id="randomSubtitle">loading...</p>
@@ -340,28 +282,8 @@
         const subtitleElement = document.getElementById('randomSubtitle');
         subtitleElement.textContent = subtitles[Math.floor(Math.random() * subtitles.length)];
 
-        const body = document.body;
-        const canvas = document.getElementById('particleCanvas');
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
-
-        let mouseX = 0;
-        let mouseY = 0;
-
-        // Load saved design
-        const savedDesign = localStorage.getItem('dll-design') || 'new';
-        applyDesign(savedDesign);
-
-        function applyDesign(design) {
-            if (design === 'classic') {
-                body.classList.add('classic-design');
-                canvas.classList.add('show');
-                initParticles();
-            } else {
-                body.classList.remove('classic-design');
-                canvas.classList.remove('show');
-            }
-        }
 
         // Background Music Logic
         const savedMusic = localStorage.getItem('dll-music-url') || 'https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3';
@@ -398,106 +320,6 @@
             iframe.src = url;
             win.document.body.appendChild(iframe);
         }
-
-        // Particle System for Classic Design
-        let particles = [];
-        const particleCount = 100;
-        const connectionDistance = 100;
-
-        function initParticles() {
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-            animate(ctx);
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                else if (this.y < 0) this.y = canvas.height;
-            }
-            draw(ctx) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            distanceTo(x, y) {
-                const dx = this.x - x;
-                const dy = this.y - y;
-                return Math.sqrt(dx * dx + dy * dy);
-            }
-        }
-
-        function animate(ctx) {
-            if (!canvas.classList.contains('show')) {
-                requestAnimationFrame(() => animate(ctx));
-                return;
-            }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw particles
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw(ctx);
-            }
-
-            // Draw connections to mouse
-            for (let i = 0; i < particles.length; i++) {
-                const dist = particles[i].distanceTo(mouseX, mouseY);
-                if (dist < connectionDistance) {
-                    ctx.strokeStyle = `rgba(180, 161, 255, ${1 - dist / connectionDistance})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(mouseX, mouseY);
-                    ctx.stroke();
-                }
-            }
-
-            // Draw connections between particles
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dist = particles[i].distanceTo(particles[j].x, particles[j].y);
-                    if (dist < connectionDistance) {
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - dist / connectionDistance)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            requestAnimationFrame(() => animate(ctx));
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        window.addEventListener('resize', () => {
-            if (canvas.classList.contains('show')) {
-                initParticles();
-            }
-        });
     </script>
 </body>
 </html>
