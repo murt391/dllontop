@@ -25,157 +25,165 @@
             align-items: center;
             font-family: 'Calistoga', serif;
             color: white;
-            transition: background 0.5s ease;
-        }
-
-        body.classic-design {
-            background: radial-gradient(circle at center, #3a0066 0%, #0d001a 100%);
         }
 
         body::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1;
-            transition: background 0.5s ease;
-        }
-
-        body.classic-design::before {
-            background: rgba(0, 0, 0, 0);
-        }
-
-        #particleCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            display: none;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            pointer-events: none;
         }
 
-        #particleCanvas.show {
-            display: block;
-        }
-
-        .settings-card {
+        .settings-container {
             position: relative;
             z-index: 2;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 40px;
-            width: 100%;
             max-width: 500px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s ease;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        body.classic-design .settings-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-        }
-
-        h1 {
-            font-size: 2.5rem;
+        .settings-title {
+            font-size: 2rem;
             margin-bottom: 30px;
             text-align: center;
-            color: #b4a1ff;
-            transition: color 0.5s ease;
-        }
-
-        body.classic-design h1 {
             color: white;
         }
 
-        .setting-group {
-            margin-bottom: 25px;
+        .settings-section {
+            margin-bottom: 30px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
+        .section-label {
             font-size: 1.1rem;
-            opacity: 0.9;
+            margin-bottom: 12px;
+            color: #b4a1ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        select, input[type="range"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-family: 'Calistoga', serif;
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
             outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #b4a1ff;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        select option {
-            background: #1a1a1a;
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #b4a1ff;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(180, 161, 255, 0.6);
+        }
+
+        .volume-value {
+            min-width: 40px;
+            text-align: right;
             color: white;
+            font-size: 0.9rem;
         }
 
-        .toggle-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            padding: 12px;
+        select {
+            width: 100%;
+            padding: 12px 15px;
             border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             color: white;
             font-family: 'Calistoga', serif;
             font-size: 1rem;
-            cursor: pointer;
+            outline: none;
             transition: all 0.3s ease;
-            text-transform: capitalize;
+            cursor: pointer;
         }
 
-        .toggle-btn.active {
-            background: #b4a1ff;
-            color: #000;
+        select:hover, select:focus {
+            background: rgba(0, 0, 0, 0.6);
             border-color: #b4a1ff;
-            font-weight: bold;
+            box-shadow: 0 0 15px rgba(180, 161, 255, 0.2);
         }
 
-        .toggle-btn:hover:not(.active) {
-            background: rgba(180, 161, 255, 0.1);
-            border-color: #b4a1ff;
+        select option {
+            background: #0d001a;
+            color: white;
         }
 
         .back-btn {
             display: block;
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 15px;
-            border: none;
-            background: #b4a1ff;
-            color: #000;
-            font-family: 'Calistoga', serif;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-align: center;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: rgba(180, 161, 255, 0.2);
+            border: 1px solid #b4a1ff;
+            color: white;
             text-decoration: none;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            text-align: center;
+            font-family: 'Calistoga', serif;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: lowercase;
         }
 
         .back-btn:hover {
-            background: white;
+            background: rgba(180, 161, 255, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(180, 161, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(180, 161, 255, 0.3);
+        }
+
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            color: #b4a1ff;
         }
 
         #bgMusic {
@@ -184,55 +192,41 @@
     </style>
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
+    <a href="index.html" class="back-link">← back</a>
 
-    <audio id="bgMusic" loop>
-        <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
-    </audio>
+    <div class="settings-container">
+        <h1 class="settings-title">settings</h1>
 
-    <div class="settings-card">
-        <h1>settings</h1>
-
-        <div class="setting-group">
-            <label>design</label>
-            <div class="toggle-group">
-                <button class="toggle-btn active" data-design="new">new</button>
-                <button class="toggle-btn" data-design="classic">classic</button>
+        <div class="settings-section">
+            <div class="section-label">volume</div>
+            <div class="volume-control">
+                <input type="range" id="volumeSlider" min="0" max="100" value="100">
+                <span class="volume-value" id="volumeValue">100%</span>
             </div>
         </div>
 
-        <div class="setting-group">
-            <label for="musicSelect">background music</label>
+        <div class="settings-section">
+            <div class="section-label">music</div>
             <select id="musicSelect">
-                <option value="default">Default Music</option>
-                <option value="lofi">Wii Menu</option>
-                <option value="chill">Wii Shop</option>
-                <option value="charlie">Charlie Kirk Funk</option>
-                <option value="hamood">hamood habibi</option>
-                <option value="none">None (Mute)</option>
+                <option value="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3">Default Music</option>
             </select>
-        </div>
-
-        <div class="setting-group">
-            <label for="volumeSlider">volume</label>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
         </div>
 
         <a href="index.html" class="back-btn">back to home</a>
     </div>
 
+    <audio id="bgMusic" loop>
+        <source id="musicSource" src="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
-        const musicSelect = document.getElementById('musicSelect');
         const volumeSlider = document.getElementById('volumeSlider');
-        const toggleBtns = document.querySelectorAll('.toggle-btn');
-        const canvas = document.getElementById('particleCanvas');
-        const body = document.body;
+        const volumeValue = document.getElementById('volumeValue');
+        const musicSelect = document.getElementById('musicSelect');
 
-        let mouseX = 0;
-        let mouseY = 0;
-
+        // Audio tracks table - you can add more songs here
         const audioTracks = {
             default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
             lofi: { name: "Wii Menu", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii.mp3" },
@@ -240,179 +234,58 @@
             charlie: { name: "charlie kirk funk", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/charlie-kirky-funk.mp3" },
             hamood: { name: "hamood habibi", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/HAMOOD HABIBI FUNK.mp3" },
             none: { name: "None (Mute)", url: "" }
+
         };
 
-        // Load saved settings
-        const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
-        const savedVolume = localStorage.getItem('dll-music-volume') || "1";
-        const savedDesign = localStorage.getItem('dll-design') || 'new';
-
-        musicSource.src = savedMusic;
-        bgMusic.volume = parseFloat(savedVolume);
-        volumeSlider.value = savedVolume;
-
-        // Set select value
+        // Populate music dropdown
         for (const key in audioTracks) {
-            if (audioTracks[key].url === savedMusic) {
-                musicSelect.value = key;
+            if (key !== 'default') {
+                const option = document.createElement('option');
+                option.value = audioTracks[key].url;
+                option.textContent = audioTracks[key].name;
+                musicSelect.appendChild(option);
             }
         }
 
-        // Design Toggle
-        function setDesign(design) {
-            localStorage.setItem('dll-design', design);
-            
-            if (design === 'classic') {
-                body.classList.add('classic-design');
-                canvas.classList.add('show');
-                initParticles();
-            } else {
-                body.classList.remove('classic-design');
-                canvas.classList.remove('show');
-            }
+        // Load saved settings
+        const savedVolume = localStorage.getItem('dll-music-volume') || '1';
+        const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
 
-            toggleBtns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.design === design) {
-                    btn.classList.add('active');
-                }
-            });
-        }
+        // Apply saved settings
+        bgMusic.volume = parseFloat(savedVolume);
+        volumeSlider.value = parseFloat(savedVolume) * 100;
+        volumeValue.textContent = Math.round(parseFloat(savedVolume) * 100) + '%';
+        musicSource.src = savedMusic;
+        musicSelect.value = savedMusic;
 
-        toggleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                setDesign(btn.dataset.design);
-            });
-        });
-
-        // Initialize design
-        setDesign(savedDesign);
-
-        // Music selection change
-        musicSelect.addEventListener('change', (e) => {
-            const track = audioTracks[e.target.value];
-            if (track.url) {
-                musicSource.src = track.url;
-                localStorage.setItem('dll-music-url', track.url);
-                bgMusic.load();
-                bgMusic.play().catch(() => {});
-            } else {
-                bgMusic.pause();
-                localStorage.setItem('dll-music-url', '');
-            }
-        });
-
-        // Volume change
+        // Volume control
         volumeSlider.addEventListener('input', (e) => {
-            const vol = e.target.value;
-            bgMusic.volume = parseFloat(vol);
-            localStorage.setItem('dll-music-volume', vol);
+            const volume = e.target.value / 100;
+            bgMusic.volume = volume;
+            volumeValue.textContent = e.target.value + '%';
+            localStorage.setItem('dll-music-volume', volume);
         });
 
+        // Music selection
+        musicSelect.addEventListener('change', (e) => {
+            musicSource.src = e.target.value;
+            localStorage.setItem('dll-music-url', e.target.value);
+            bgMusic.load();
+            bgMusic.play().catch(() => {});
+        });
+
+        // Start music on interaction
         const startMusic = () => {
             bgMusic.play().catch(() => {});
             document.removeEventListener('click', startMusic);
+            document.removeEventListener('keydown', startMusic);
         };
+
         document.addEventListener('click', startMusic);
+        document.addEventListener('keydown', startMusic);
 
-        // Particle System for Classic Design
-        let particles = [];
-        const particleCount = 100;
-        const connectionDistance = 100;
-
-        function initParticles() {
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-            animate(ctx);
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                else if (this.y < 0) this.y = canvas.height;
-            }
-            draw(ctx) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            distanceTo(x, y) {
-                const dx = this.x - x;
-                const dy = this.y - y;
-                return Math.sqrt(dx * dx + dy * dy);
-            }
-        }
-
-        function animate(ctx) {
-            if (!canvas.classList.contains('show')) {
-                requestAnimationFrame(() => animate(ctx));
-                return;
-            }
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw particles
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw(ctx);
-            }
-
-            // Draw connections to mouse
-            for (let i = 0; i < particles.length; i++) {
-                const dist = particles[i].distanceTo(mouseX, mouseY);
-                if (dist < connectionDistance) {
-                    ctx.strokeStyle = `rgba(180, 161, 255, ${1 - dist / connectionDistance})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(mouseX, mouseY);
-                    ctx.stroke();
-                }
-            }
-
-            // Draw connections between particles
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dist = particles[i].distanceTo(particles[j].x, particles[j].y);
-                    if (dist < connectionDistance) {
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - dist / connectionDistance)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            requestAnimationFrame(() => animate(ctx));
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        window.addEventListener('resize', () => {
-            if (canvas.classList.contains('show')) {
-                initParticles();
-            }
+        window.addEventListener('load', () => {
+            bgMusic.play().catch(() => {});
         });
     </script>
 </body>
