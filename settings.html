@@ -230,13 +230,16 @@
         const canvas = document.getElementById('particleCanvas');
         const body = document.body;
 
+        let mouseX = 0;
+        let mouseY = 0;
+
         const audioTracks = {
             default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
             lofi: { name: "Wii Menu", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii.mp3" },
             chill: { name: "Wii Shop", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii2.mp3" },
             charlie: { name: "charlie kirk funk", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/charlie-kirky-funk.mp3" },
             hamood: { name: "hamood habibi", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/HAMOOD HABIBI FUNK.mp3" },
-            none: { name: "None (Mute)", url: "eaea" }
+            none: { name: "None (Mute)", url: "" }
         };
 
         // Load saved settings
@@ -315,6 +318,7 @@
         // Particle System for Classic Design
         let particles = [];
         const particleCount = 100;
+        const connectionDistance = 100;
 
         function initParticles() {
             const ctx = canvas.getContext('2d');
@@ -349,6 +353,11 @@
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
+            distanceTo(x, y) {
+                const dx = this.x - x;
+                const dy = this.y - y;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
         }
 
         function animate(ctx) {
@@ -357,12 +366,48 @@
                 return;
             }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw particles
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw(ctx);
             }
+
+            // Draw connections to mouse
+            for (let i = 0; i < particles.length; i++) {
+                const dist = particles[i].distanceTo(mouseX, mouseY);
+                if (dist < connectionDistance) {
+                    ctx.strokeStyle = `rgba(180, 161, 255, ${1 - dist / connectionDistance})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(mouseX, mouseY);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw connections between particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dist = particles[i].distanceTo(particles[j].x, particles[j].y);
+                    if (dist < connectionDistance) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - dist / connectionDistance)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
             requestAnimationFrame(() => animate(ctx));
         }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
 
         window.addEventListener('resize', () => {
             if (canvas.classList.contains('show')) {
