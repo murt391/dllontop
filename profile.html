@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll - Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Calistoga', serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .title span.d { color: white; }
+        .title span.ll { color: #b4a1ff; }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: 'Calistoga', serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #b4a1ff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Calistoga', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: #b4a1ff;
+            color: black;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(180, 161, 255, 0.4);
+        }
+
+        .btn-google {
+            background: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google img {
+            width: 20px;
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            opacity: 0.5;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: white;
+        }
+
+        .divider span {
+            padding: 0 10px;
+            font-size: 0.8rem;
+        }
+
+        .toggle-auth {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .toggle-auth a {
+            color: #b4a1ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .profile-view {
+            display: none;
+        }
+
+        .profile-view h2 {
+            margin-bottom: 10px;
+        }
+
+        .profile-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .profile-info p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            transform: translateX(-5px);
+            color: #b4a1ff;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        back
+    </a>
+
+    <div class="container" id="authContainer">
+        <h1 class="title"><span class="d">d</span><span class="ll">ll</span></h1>
+        
+        <div id="loginForm">
+            <h2>login</h2>
+            <div class="form-group">
+                <label>email</label>
+                <input type="email" id="loginEmail" placeholder="enter email">
+            </div>
+            <div class="form-group">
+                <label>password</label>
+                <input type="password" id="loginPass" placeholder="enter password">
+            </div>
+            <p id="loginError" class="error-msg"></p>
+            <button class="btn btn-primary" onclick="handleLogin()">login</button>
+            
+            <div class="divider"><span>or</span></div>
+            
+            <button class="btn btn-google" onclick="handleGoogleAuth()">
+                <img src="https://raw.githubusercontent.com/murt391/dllontop/main/googleico.png" alt="Google">
+                use google
+            </button>
+            
+            <p class="toggle-auth">don't have an account? <a onclick="toggleAuth()">sign up</a></p>
+        </div>
+
+        <div id="signupForm" style="display: none;">
+            <h2>sign up</h2>
+            <div class="form-group">
+                <label>username</label>
+                <input type="text" id="signupUser" placeholder="choose username">
+            </div>
+            <div class="form-group">
+                <label>email</label>
+                <input type="email" id="signupEmail" placeholder="enter email">
+            </div>
+            <div class="form-group">
+                <label>password</label>
+                <input type="password" id="signupPass" placeholder="choose password">
+            </div>
+            <p id="signupError" class="error-msg"></p>
+            <button class="btn btn-primary" onclick="handleSignup()">create account</button>
+            
+            <div class="divider"><span>or</span></div>
+            
+            <button class="btn btn-google" onclick="handleGoogleAuth()">
+                <img src="https://raw.githubusercontent.com/murt391/dllontop/main/googleico.png" alt="Google">
+                use google
+            </button>
+            
+            <p class="toggle-auth">already have an account? <a onclick="toggleAuth()">login</a></p>
+        </div>
+
+        <div id="profileView" class="profile-view">
+            <h2>welcome back!</h2>
+            <div class="profile-info">
+                <p><strong>username:</strong> <span id="displayUsername"></span></p>
+                <p><strong>email:</strong> <span id="displayEmail"></span></p>
+            </div>
+            <button class="btn btn-primary" onclick="handleLogout()">logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Mock Auth System using localStorage
+        const getUsers = () => JSON.parse(localStorage.getItem('dll_users') || '[]');
+        const setUsers = (users) => localStorage.setItem('dll_users', JSON.stringify(users));
+        const getCurrentUser = () => JSON.parse(localStorage.getItem('dll_current_user'));
+        const setCurrentUser = (user) => localStorage.setItem('dll_current_user', JSON.stringify(user));
+
+        function toggleAuth() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+
+        function handleSignup() {
+            const username = document.getElementById('signupUser').value.trim().toLowerCase();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPass').value;
+            const errorEl = document.getElementById('signupError');
+
+            if (!username || !email || !password) {
+                errorEl.textContent = 'please fill all fields';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const users = getUsers();
+            if (users.find(u => u.username === username)) {
+                errorEl.textContent = 'username already taken';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                errorEl.textContent = 'email already registered';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const newUser = { username, email, password };
+            users.push(newUser);
+            setUsers(users);
+            setCurrentUser(newUser);
+            checkAuth();
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPass').value;
+            const errorEl = document.getElementById('loginError');
+
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                setCurrentUser(user);
+                checkAuth();
+            } else {
+                errorEl.textContent = 'invalid email or password';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function handleGoogleAuth() {
+            // Simulated Google Auth
+            alert('simulating google login...');
+            const mockGoogleUser = {
+                username: 'google_user_' + Math.floor(Math.random() * 1000),
+                email: 'google@example.com',
+                isGoogle: true
+            };
+            
+            const users = getUsers();
+            if (!users.find(u => u.email === mockGoogleUser.email)) {
+                users.push(mockGoogleUser);
+                setUsers(users);
+            }
+            
+            setCurrentUser(mockGoogleUser);
+            checkAuth();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('dll_current_user');
+            checkAuth();
+        }
+
+        function checkAuth() {
+            const user = getCurrentUser();
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const profileView = document.getElementById('profileView');
+
+            if (user) {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'none';
+                profileView.style.display = 'block';
+                document.getElementById('displayUsername').textContent = user.username;
+                document.getElementById('displayEmail').textContent = user.email;
+            } else {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                profileView.style.display = 'none';
+            }
+        }
+
+        window.onload = checkAuth;
+    </script>
+</body>
+</html>
