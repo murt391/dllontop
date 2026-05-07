@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll - Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Calistoga', serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .chat-container {
+            position: relative;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h2 {
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .chat-header h2 span.d { color: white; }
+        .chat-header h2 span.ll { color: #b4a1ff; }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: #b4a1ff transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #b4a1ff;
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #b4a1ff;
+            color: black;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-user {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            opacity: 0.7;
+            font-weight: bold;
+        }
+
+        .message.sent .message-user {
+            color: rgba(0, 0, 0, 0.6);
+            text-align: right;
+        }
+
+        .message-text {
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 12px 20px;
+            color: white;
+            font-family: 'Calistoga', serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #b4a1ff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .send-btn {
+            background: #b4a1ff;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: black;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 15px rgba(180, 161, 255, 0.5);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            transform: translateX(-5px);
+            color: #b4a1ff;
+        }
+
+        .auth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .auth-overlay h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-auth {
+            background: #b4a1ff;
+            color: black;
+            padding: 12px 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(180, 161, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        back
+    </a>
+
+    <div class="chat-container">
+        <div id="authOverlay" class="auth-overlay" style="display: none;">
+            <h3>please sign in to join the chat</h3>
+            <a href="profile.html" class="btn-auth">go to profile</a>
+        </div>
+
+        <div class="chat-header">
+            <h2><span class="d">d</span><span class="ll">ll</span> chat</h2>
+            <div id="onlineCount" style="font-size: 0.9rem; opacity: 0.6;">chatroom active</div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" class="chat-input" placeholder="type a message..." autocomplete="off">
+            <button class="send-btn" onclick="sendMessage()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const authOverlay = document.getElementById('authOverlay');
+
+        // Check Auth
+        const currentUser = JSON.parse(localStorage.getItem('dll_current_user'));
+        if (!currentUser) {
+            authOverlay.style.display = 'flex';
+        }
+
+        // Chat Logic using localStorage
+        const getMessages = () => JSON.parse(localStorage.getItem('dll_messages') || '[]');
+        const saveMessage = (msg) => {
+            const messages = getMessages();
+            messages.push(msg);
+            // Keep only last 50 messages
+            if (messages.length > 50) messages.shift();
+            localStorage.setItem('dll_messages', JSON.stringify(messages));
+        };
+
+        function renderMessages() {
+            const messages = getMessages();
+            const currentHTML = chatMessages.innerHTML;
+            let newHTML = '';
+            
+            messages.forEach(msg => {
+                const isMe = currentUser && msg.user === currentUser.username;
+                newHTML += `
+                    <div class="message ${isMe ? 'sent' : 'received'}">
+                        <div class="message-user">${msg.user}</div>
+                        <div class="message-text">${escapeHTML(msg.text)}</div>
+                    </div>
+                `;
+            });
+
+            if (newHTML !== currentHTML) {
+                chatMessages.innerHTML = newHTML;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !currentUser) return;
+
+            const newMessage = {
+                user: currentUser.username,
+                text: text,
+                time: Date.now()
+            };
+
+            saveMessage(newMessage);
+            messageInput.value = '';
+            renderMessages();
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Enter key to send
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Initial render and "polling"
+        renderMessages();
+        setInterval(renderMessages, 1000);
+
+        // Add some welcome messages if empty
+        if (getMessages().length === 0) {
+            saveMessage({ user: 'system', text: 'welcome to dll chat! keep it friendly.', time: Date.now() });
+            renderMessages();
+        }
+    </script>
+</body>
+</html>
