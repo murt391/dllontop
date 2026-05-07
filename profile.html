@@ -203,44 +203,6 @@
             transform: translateX(-5px);
             color: #b4a1ff;
         }
-
-        .panel-btn {
-            background: #ff6b6b;
-            color: white;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* Panel Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal-content {
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid #b4a1ff;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .modal-title {
-            color: #b4a1ff;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
     </style>
 </head>
 <body>
@@ -308,39 +270,7 @@
                 <p><strong>username:</strong> <span id="displayUsername"></span></p>
                 <p><strong>email:</strong> <span id="displayEmail"></span></p>
             </div>
-            <button id="thePanelBtn" class="btn panel-btn" onclick="openPanel()">the panel</button>
             <button class="btn btn-primary" onclick="handleLogout()">logout</button>
-        </div>
-    </div>
-
-    <!-- The Panel Modal -->
-    <div id="panelModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">the panel</h2>
-            <div id="passcodeSection">
-                <div class="form-group">
-                    <label>enter passcode</label>
-                    <input type="password" id="panelPasscode" placeholder="passcode">
-                </div>
-                <button class="btn btn-primary" onclick="verifyPasscode()">access panel</button>
-                <button class="btn" onclick="closePanel()">cancel</button>
-            </div>
-            <div id="addGameSection" style="display: none;">
-                <div class="form-group">
-                    <label>game name</label>
-                    <input type="text" id="gameName" placeholder="game name">
-                </div>
-                <div class="form-group">
-                    <label>logo URL</label>
-                    <input type="text" id="gameLogo" placeholder="logo url">
-                </div>
-                <div class="form-group">
-                    <label>HTML file (base64 or URL)</label>
-                    <input type="text" id="gameFile" placeholder="game url or filename">
-                </div>
-                <button class="btn btn-primary" onclick="addGame()">add game</button>
-                <button class="btn" onclick="closePanel()">close</button>
-            </div>
         </div>
     </div>
 
@@ -382,6 +312,12 @@
                 return;
             }
 
+            if (users.find(u => u.email === email)) {
+                errorEl.textContent = 'email already registered';
+                errorEl.style.display = 'block';
+                return;
+            }
+
             const newUser = { username, email, password };
             users.push(newUser);
             setUsers(users);
@@ -406,6 +342,8 @@
             }
         }
 
+
+
         function handleLogout() {
             localStorage.removeItem('dll_current_user');
             checkAuth();
@@ -416,7 +354,6 @@
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
             const profileView = document.getElementById('profileView');
-            const panelBtn = document.getElementById('thePanelBtn');
 
             if (user) {
                 loginForm.style.display = 'none';
@@ -424,60 +361,11 @@
                 profileView.style.display = 'block';
                 document.getElementById('displayUsername').textContent = user.username;
                 document.getElementById('displayEmail').textContent = user.email;
-
-                // Show "the panel" only for user "murt"
-                if (user.username === 'murt') {
-                    panelBtn.style.display = 'block';
-                } else {
-                    panelBtn.style.display = 'none';
-                }
             } else {
                 loginForm.style.display = 'block';
                 signupForm.style.display = 'none';
                 profileView.style.display = 'none';
             }
-        }
-
-        // Panel Functions
-        function openPanel() {
-            document.getElementById('panelModal').style.display = 'flex';
-            document.getElementById('passcodeSection').style.display = 'block';
-            document.getElementById('addGameSection').style.display = 'none';
-        }
-
-        function closePanel() {
-            document.getElementById('panelModal').style.display = 'none';
-        }
-
-        function verifyPasscode() {
-            const passcode = document.getElementById('panelPasscode').value;
-            if (passcode === '950713620') {
-                document.getElementById('passcodeSection').style.display = 'none';
-                document.getElementById('addGameSection').style.display = 'block';
-            } else {
-                alert('incorrect passcode');
-            }
-        }
-
-        function addGame() {
-            const name = document.getElementById('gameName').value;
-            const logo = document.getElementById('gameLogo').value;
-            const file = document.getElementById('gameFile').value;
-
-            if (!name || !logo || !file) {
-                alert('please fill all fields');
-                return;
-            }
-
-            const games = JSON.parse(localStorage.getItem('dll_custom_games') || '[]');
-            games.push({ name, logo, file });
-            localStorage.setItem('dll_custom_games', JSON.stringify(games));
-
-            alert('game added successfully!');
-            document.getElementById('gameName').value = '';
-            document.getElementById('gameLogo').value = '';
-            document.getElementById('gameFile').value = '';
-            closePanel();
         }
 
         window.onload = checkAuth;
