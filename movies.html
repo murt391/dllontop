@@ -218,7 +218,6 @@
     <div class="container">
         <div class="header">
             <h1>movies</h1>
-            <button class="add-btn" onclick="openModal()">+ add movie</button>
         </div>
 
         <div class="movies-grid" id="moviesGrid">
@@ -227,18 +226,6 @@
     </div>
 
     <!-- Add Movie Modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <h2>add new movie</h2>
-            <input type="text" id="movieName" placeholder="movie name">
-            <input type="text" id="movieUrl" placeholder="video url (mp4 or youtube link)">
-            <p style="font-size: 0.7rem; color: #888; margin-bottom: 15px;">* youtube links will be automatically embedded</p>
-            <div class="modal-buttons">
-                <button class="cancel-btn" onclick="closeModal()">cancel</button>
-                <button class="save-btn" onclick="saveMovie()">add</button>
-            </div>
-        </div>
-    </div>
 
     <script>
         const moviesGrid = document.getElementById('moviesGrid');
@@ -253,7 +240,7 @@
             if (movies.length === 0) {
                 movies.push({
                     id: Date.now(),
-                    name: 'Welcome to dll movies',
+                    name: 'rickroll',
                     url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                 });
             }
@@ -269,14 +256,6 @@
                 } else {
                     videoHtml = `<video src="${movie.url}" controls></video>`;
                 }
-
-                card.innerHTML = `
-                    <div class="video-container">${videoHtml}</div>
-                    <div class="movie-info">
-                        <span class="movie-title">${movie.name}</span>
-                        <span class="delete-btn" onclick="deleteMovie(${movie.id})">delete</span>
-                    </div>
-                `;
                 moviesGrid.appendChild(card);
             });
         }
