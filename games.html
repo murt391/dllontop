@@ -17,7 +17,7 @@
         body {
             background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
             background-size: cover;
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
             overflow-x: hidden;
             font-family: 'Calistoga', serif;
@@ -694,6 +694,9 @@
     </div>
 
     <script>
+        const gamesGrid = document.getElementById('gamesGrid');
+        const gameSearch = document.getElementById('gameSearch');
+
         // Background Music Logic
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
@@ -715,14 +718,45 @@
         };
         document.addEventListener('click', startMusic);
 
-        document.getElementById('gameSearch').addEventListener('input', (e) => {
+        // Load custom games from localStorage
+        function loadCustomGames() {
+            const customGames = JSON.parse(localStorage.getItem('dll_custom_games') || '[]');
+            customGames.forEach(game => {
+                const gameCard = document.createElement('a');
+                gameCard.href = game.file;
+                gameCard.className = 'game-card custom-game';
+                gameCard.innerHTML = `
+                    <img src="${game.logo}" alt="${game.name}" class="game-thumbnail" onerror="this.src='https://via.placeholder.com/200x200/2e004f/ffffff?text=${game.name}'">
+                    <div class="game-info"><div class="game-title">${game.name}</div></div>
+                `;
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        // Search functionality
+        gameSearch.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.game-card');
+            
             cards.forEach(card => {
-                const title = card.querySelector('.game-title').innerText.toLowerCase();
-                card.style.display = title.includes(term) ? 'flex' : 'none';
+                const title = card.querySelector('.game-title').textContent.toLowerCase();
+                if (title.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         });
+
+        // Dynamic Background Logic
+        const savedBg = localStorage.getItem('dll-bg-url');
+        if (savedBg) {
+            document.body.style.background = `url('${savedBg}') no-repeat center center fixed`;
+            document.body.style.backgroundSize = 'cover';
+        }
+
+        // Initialize
+        loadCustomGames();
     </script>
 </body>
 </html>
