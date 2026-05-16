@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dll. | botter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Calistoga&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            font-family: 'Calistoga', serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #b4a1ff;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'Calistoga', serif;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #b4a1ff;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: #b4a1ff;
+            color: black;
+            font-family: 'Calistoga', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(180, 161, 255, 0.4);
+        }
+
+        .status-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            font-size: 0.9rem;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            display: none;
+            scrollbar-width: thin;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            color: #b4a1ff;
+        }
+
+        .bot-log {
+            margin-bottom: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← back</a>
+
+    <div class="container">
+        <h1>botter</h1>
+        
+        <div class="input-group">
+            <label>game type</label>
+            <select id="gameType">
+                <option value="blooket">Blooket</option>
+                <option value="kahoot">Kahoot</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>game ID / PIN</label>
+            <input type="text" id="gameId" placeholder="enter pin">
+        </div>
+
+        <div class="input-group">
+            <label>number of bots (1-50)</label>
+            <input type="number" id="botCount" min="1" max="50" value="10">
+        </div>
+
+        <button class="btn" onclick="startBotting()">send bots</button>
+
+        <div class="status-box" id="statusBox">
+            <!-- Logs will appear here -->
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js';
+        import { getAuth, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js';
+
+        const fblooks = ["Chick", "Chicken", "Cow", "Goat", "Horse", "Pig", "Sheep", "Duck", "Alpaca", "Dog", "Cat", "Rabbit", "Goldfish", "Hamster", "Turtle", "Kitten", "Puppy", "Bear", "Moose", "Fox", "Raccoon", "Squirrel", "Owl", "Hedgehog", "Deer", "Wolf", "Beaver", "Tiger", "Orangutan", "Cockatoo", "Parrot", "Anaconda", "Jaguar", "Macaw", "Toucan", "Panther", "Capuchin"];
+
+        window.startBotting = async function() {
+            const type = document.getElementById('gameType').value;
+            const id = document.getElementById('gameId').value.trim();
+            const count = parseInt(document.getElementById('botCount').value);
+            const statusBox = document.getElementById('statusBox');
+
+            if (!id) {
+                alert('please enter a game ID');
+                return;
+            }
+
+            if (isNaN(count) || count < 1 || count > 50) {
+                alert('please enter a number between 1 and 50');
+                return;
+            }
+
+            if (type === 'kahoot') {
+                alert('Kahoot botting is currently under maintenance. Please use Blooket.');
+                return;
+            }
+
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = `<div class="bot-log" style="color: #b4a1ff;">> connecting to blooket bot api...</div>`;
+            
+            for (let i = 0; i < count; i++) {
+                const botName = `dll_bot_${Math.floor(Math.random() * 10000)}`;
+                try {
+                    const response = await fetch("https://blooketbot.schoolcheats.net/join", {
+                        body: JSON.stringify({ id: id, name: botName }),
+                        headers: { "Content-Type": "application/json" },
+                        method: "POST"
+                    });
+                    
+                    const body = await response.json();
+                    
+                    if (body.success) {
+                        const liveApp = initializeApp({
+                            apiKey: "AIzaSyCA-cTOnX19f6LFnDVVsHXya3k6ByP_MnU",
+                            authDomain: "blooket-2020.firebaseapp.com",
+                            projectId: "blooket-2020",
+                            storageBucket: "blooket-2020.appspot.com",
+                            messagingSenderId: "741533559105",
+                            appId: "1:741533559105:web:b8cbb10e6123f2913519c0",
+                            measurementId: "G-S3H5NGN10Z",
+                            databaseURL: body.fbShardURL,
+                        }, Date.now().toString() + i);
+
+                        const auth = getAuth(liveApp);
+                        await signInWithCustomToken(auth, body.fbToken);
+                        const db = getDatabase(liveApp);
+                        
+                        await set(ref(db, `${id}/c/${botName}`), {
+                            b: fblooks[Math.floor(Math.random() * fblooks.length)]
+                        });
+
+                        const log = document.createElement('div');
+                        log.className = 'bot-log';
+                        log.innerHTML = `<span style="color: #4CAF50;">[SUCCESS]</span> ${botName} joined`;
+                        statusBox.appendChild(log);
+                    } else {
+                        const log = document.createElement('div');
+                        log.className = 'bot-log';
+                        log.innerHTML = `<span style="color: #f44336;">[FAILED]</span> ${botName}: ${body.msg || 'Unknown error'}`;
+                        statusBox.appendChild(log);
+                    }
+                } catch (err) {
+                    const log = document.createElement('div');
+                    log.className = 'bot-log';
+                    log.innerHTML = `<span style="color: #f44336;">[ERROR]</span> API request failed (CORS or server down)`;
+                    statusBox.appendChild(log);
+                    break;
+                }
+                statusBox.scrollTop = statusBox.scrollHeight;
+                await new Promise(r => setTimeout(r, 300)); // Delay to prevent spam
+            }
+
+            const finalLog = document.createElement('div');
+            finalLog.className = 'bot-log';
+            finalLog.style.marginTop = '10px';
+            finalLog.style.color = '#b4a1ff';
+            finalLog.innerHTML = `> process finished.`;
+            statusBox.appendChild(finalLog);
+        }
+
+        // Global Settings & Effects (Background, Top Bar, Dots)
+        const script = document.createElement('script');
+        script.src = 'global.js';
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>
