@@ -177,5 +177,13 @@
             <!-- End of Movie List -->
         </div>
     </div>
+    <script>
+        // Dynamic Background Logic
+        const savedBg = localStorage.getItem('dll-bg-url');
+        if (savedBg) {
+            document.body.style.background = `url('${savedBg}') no-repeat center center fixed`;
+            document.body.style.backgroundSize = 'cover';
+        }
+    </script>
 </body>
 </html>
