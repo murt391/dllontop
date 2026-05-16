@@ -208,7 +208,14 @@
         <div class="settings-section">
             <div class="section-label">music</div>
             <select id="musicSelect">
-                <option value="https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3">Default Music</option>
+                <!-- Music options populated by script -->
+            </select>
+        </div>
+
+        <div class="settings-section">
+            <div class="section-label">background</div>
+            <select id="bgSelect">
+                <!-- Background options populated by script -->
             </select>
         </div>
 
@@ -225,8 +232,9 @@
         const volumeSlider = document.getElementById('volumeSlider');
         const volumeValue = document.getElementById('volumeValue');
         const musicSelect = document.getElementById('musicSelect');
+        const bgSelect = document.getElementById('bgSelect');
 
-        // Audio tracks table - you can add more songs here
+        // Audio tracks table
         const audioTracks = {
             default: { name: "Default Music", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3" },
             lofi: { name: "Wii Menu", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/wii.mp3" },
@@ -234,59 +242,85 @@
             charlie: { name: "charlie kirk funk", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/charlie-kirky-funk.mp3" },
             hamood: { name: "hamood habibi", url: "https://github.com/murt391/dllontop/raw/refs/heads/main/HAMOOD HABIBI FUNK.mp3" },
             none: { name: "None (Mute)", url: "" }
+        };
 
+        // Background images table - you can add more images here
+        const backgroundImages = {
+            default: { name: "Default (Purple Space)", url: "https://raw.githubusercontent.com/murt391/dllontop/main/pnfe3hsy5d4c1.png" },
+            nightSky: { name: "Forest", url: "https://raw.githubusercontent.com/murt391/dllontop/main/forest.png" },
+            galaxy: { name: "Galaxy", url: "https://raw.githubusercontent.com/murt391/dllontop/main/s-l1200.png" },
+            nebula: { name: "Night Sky", url: "https://raw.githubusercontent.com/murt391/dllontop/main/nightsky.png" },
+            sunset: { name: "Leaves", url: "https://raw.githubusercontent.com/murt391/dllontop/main/leaf.png" }
         };
 
         // Populate music dropdown
         for (const key in audioTracks) {
-            if (key !== 'default') {
-                const option = document.createElement('option');
-                option.value = audioTracks[key].url;
-                option.textContent = audioTracks[key].name;
-                musicSelect.appendChild(option);
-            }
+            const option = document.createElement('option');
+            option.value = audioTracks[key].url;
+            option.textContent = audioTracks[key].name;
+            musicSelect.appendChild(option);
+        }
+
+        // Populate background dropdown
+        for (const key in backgroundImages) {
+            const option = document.createElement('option');
+            option.value = backgroundImages[key].url;
+            option.textContent = backgroundImages[key].name;
+            bgSelect.appendChild(option);
+        }
+
+        // Apply background helper
+        function applyBackground(url) {
+            document.body.style.background = `url('${url}') no-repeat center center fixed`;
+            document.body.style.backgroundSize = 'cover';
         }
 
         // Load saved settings
-        const savedVolume = localStorage.getItem('dll-music-volume') || '1';
+        const savedVolume = localStorage.getItem('dll-music-volume') || '100';
         const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
+        const savedBg = localStorage.getItem('dll-bg-url') || backgroundImages.default.url;
 
-        // Apply saved settings
-        bgMusic.volume = parseFloat(savedVolume);
-        volumeSlider.value = parseFloat(savedVolume) * 100;
-        volumeValue.textContent = Math.round(parseFloat(savedVolume) * 100) + '%';
-        musicSource.src = savedMusic;
+        volumeSlider.value = savedVolume;
+        volumeValue.textContent = `${savedVolume}%`;
+        bgMusic.volume = savedVolume / 100;
         musicSelect.value = savedMusic;
+        bgSelect.value = savedBg;
+        applyBackground(savedBg);
 
-        // Volume control
+        // Update Volume
         volumeSlider.addEventListener('input', (e) => {
-            const volume = e.target.value / 100;
-            bgMusic.volume = volume;
-            volumeValue.textContent = e.target.value + '%';
-            localStorage.setItem('dll-music-volume', volume);
+            const val = e.target.value;
+            volumeValue.textContent = `${val}%`;
+            bgMusic.volume = val / 100;
+            localStorage.setItem('dll-music-volume', val);
         });
 
-        // Music selection
+        // Update Music
         musicSelect.addEventListener('change', (e) => {
-            musicSource.src = e.target.value;
-            localStorage.setItem('dll-music-url', e.target.value);
-            bgMusic.load();
-            bgMusic.play().catch(() => {});
+            const url = e.target.value;
+            localStorage.setItem('dll-music-url', url);
+            if (url) {
+                musicSource.src = url;
+                bgMusic.load();
+                bgMusic.play().catch(() => {});
+            } else {
+                bgMusic.pause();
+            }
         });
 
-        // Start music on interaction
-        const startMusic = () => {
-            bgMusic.play().catch(() => {});
-            document.removeEventListener('click', startMusic);
-            document.removeEventListener('keydown', startMusic);
-        };
-
-        document.addEventListener('click', startMusic);
-        document.addEventListener('keydown', startMusic);
-
-        window.addEventListener('load', () => {
-            bgMusic.play().catch(() => {});
+        // Update Background
+        bgSelect.addEventListener('change', (e) => {
+            const url = e.target.value;
+            localStorage.setItem('dll-bg-url', url);
+            applyBackground(url);
         });
+
+        // Click to start music if not playing
+        document.addEventListener('click', () => {
+            if (bgMusic.paused && musicSelect.value) {
+                bgMusic.play().catch(() => {});
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
