@@ -701,16 +701,11 @@
         const bgMusic = document.getElementById('bgMusic');
         const musicSource = document.getElementById('musicSource');
         
-        const savedMusic = localStorage.getItem('dll-music-url');
-        if (savedMusic) {
-            musicSource.src = savedMusic;
-            bgMusic.load();
-        }
+        const savedMusic = localStorage.getItem('dll-music-url') || 'https://github.com/murt391/dllontop/raw/refs/heads/main/thepenis.mp3';
+        musicSource.src = savedMusic;
         
-        const savedVolume = localStorage.getItem('dll-music-volume');
-        if (savedVolume !== null) {
-            bgMusic.volume = parseFloat(savedVolume);
-        }
+        const savedVolume = localStorage.getItem('dll-music-volume') || '100';
+        bgMusic.volume = savedVolume / 100;
 
         const startMusic = () => {
             bgMusic.play().catch(() => {});
