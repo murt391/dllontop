@@ -359,12 +359,10 @@
             document.removeEventListener('keydown', startMusic);
         };
 
-        // Dynamic Background Logic
-        const savedBg = localStorage.getItem('dll-bg-url');
-        if (savedBg) {
-            document.body.style.background = `url('${savedBg}') no-repeat center center fixed`;
-            document.body.style.backgroundSize = 'cover';
-        }
+        // Global Settings & Effects (Background, Top Bar, Dots)
+        const script = document.createElement('script');
+        script.src = 'global.js';
+        document.body.appendChild(script);
 
         document.addEventListener('click', startMusic);
         document.addEventListener('keydown', startMusic);
