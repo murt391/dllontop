@@ -59,8 +59,60 @@
             color: white;
         }
 
-        .settings-section {
-            margin-bottom: 30px;
+           .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #b4a1ff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
         }
 
         .section-label {
@@ -205,18 +257,34 @@
             </div>
         </div>
 
-        <div class="settings-section">
+         <div class="setting-group">
             <div class="section-label">music</div>
             <select id="musicSelect">
                 <!-- Music options populated by script -->
             </select>
         </div>
 
-        <div class="settings-section">
+        <div class="setting-group">
             <div class="section-label">background</div>
             <select id="bgSelect">
                 <!-- Background options populated by script -->
             </select>
+        </div>
+
+        <div class="toggle-group">
+            <label>show top bar (time/temp)</label>
+            <label class="switch">
+                <input type="checkbox" id="topBarToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-group">
+            <label>falling dots effect</label>
+            <label class="switch">
+                <input type="checkbox" id="dotsToggle">
+                <span class="slider"></span>
+            </label>
         </div>
 
         <a href="index.html" class="back-btn">back to home</a>
@@ -279,12 +347,16 @@
         const savedVolume = localStorage.getItem('dll-music-volume') || '100';
         const savedMusic = localStorage.getItem('dll-music-url') || audioTracks.default.url;
         const savedBg = localStorage.getItem('dll-bg-url') || backgroundImages.default.url;
+        const topBarEnabled = localStorage.getItem('dll-topbar-enabled') !== 'false';
+        const dotsEnabled = localStorage.getItem('dll-dots-enabled') === 'true';
 
         volumeSlider.value = savedVolume;
         volumeValue.textContent = `${savedVolume}%`;
         bgMusic.volume = savedVolume / 100;
         musicSelect.value = savedMusic;
         bgSelect.value = savedBg;
+        document.getElementById('topBarToggle').checked = topBarEnabled;
+        document.getElementById('dotsToggle').checked = dotsEnabled;
         applyBackground(savedBg);
 
         // Update Volume
@@ -313,6 +385,16 @@
             const url = e.target.value;
             localStorage.setItem('dll-bg-url', url);
             applyBackground(url);
+        });
+
+        // Update Top Bar Toggle
+        document.getElementById('topBarToggle').addEventListener('change', (e) => {
+            localStorage.setItem('dll-topbar-enabled', e.target.checked);
+        });
+
+        // Update Dots Toggle
+        document.getElementById('dotsToggle').addEventListener('change', (e) => {
+            localStorage.setItem('dll-dots-enabled', e.target.checked);
         });
 
         // Click to start music if not playing
